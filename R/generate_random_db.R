@@ -1,0 +1,88 @@
+#' Generate a random database of peptides.
+#' 
+#' This function generates a database of random sequences using a restricted randomization procedure that shuffels the amino acids of the input database over its peptide length distribution. It also respects the N-terminal pyroglutamination and C-terminal amidation frequencies. If we plot the sorted molecular weights of the mock database on the sorted molecular weights of the input database, we expect them to reside approximately on y=x. The generate_random_db function will be used in the false discovery estimation of \code{\link{pep.id}}.
+#' 
+#' @author Rik Verdonck
+#' @seealso \code{\link{pep.id}}
+#' @param db       A database with the first 3 columns \code{"name","MW"} and \code{"sequence"} (as read in with the \code{\link{download_lpm_db}} function)
+#' @param size     Numeric. The desired mock database size as a proportion of the original database size. 
+#' @param plot     Logical. If TRUE, mock database is plotted onto original database. Only works if mock and real database are of equal size (\code{size} paramter is 1). 
+#' @param verbose  Logical. If TRUE, some properties of the mock database are printed in the terminal. 
+#' @export
+#' @return A database of random peptides.
+
+
+
+
+generate_random_db <-function(db,size=1,plot=F,verbose=F)
+{
+    ### Count the number of peptides
+
+    N<-nrow(db)
+
+    ### Make a concatenate of all sequences
+    concat<-paste(db[,3],collapse="")
+    aminoacids<-unlist(strsplit(concat,""))
+
+    ### Count amidation frequency
+    P_ami<-sum(aminoacids=="a")/N
+    #cat("amidation frequency:\n")
+    #print(P_ami)
+
+    ### Count pyroglutamination frequency
+    P_pyr<-sum(aminoacids=="p")/N
+    #cat("pyroglutamine frequency:\n")
+    #print(P_pyr)
+
+    ### Now isolate the sequences, remove everything unconvenient and calculate a distribution of peptide lengths   
+    sequences<-db[,3]
+    sequences<-sub("a","",sequences)
+    sequences<-sub("p","",sequences)
+    sequences<-sub("$","",sequences)
+
+    ### Now extract a length distribution vector
+    lengthdistribution<-nchar(sequences)
+
+    ### Now remove the other non-amino acid characters
+    sequences<-sub("X","",sequences)
+    sequences<-sub("?","",sequences)
+    sequences<-sub("J","",sequences)
+    sequences<-sub("&","",sequences)
+
+    ### Now make a vector that contains every amino acid from our database
+    concat<-unlist(strsplit(paste(sequences,collapse=""),""))
+
+    ### OK, now we will generate N peptides, sampled from the empirical length distribution, with amino acids sampled from the amino acids from the real database. 
+    decoydatabase<-data.frame(matrix(ncol=3,nrow=N*size))
+    colnames(decoydatabase)<-c("name","mass","sequence")
+
+    for(i in 1:(size*N))
+    {
+        n<-sample(lengthdistribution,1)
+        newsequence<-paste(sample(concat,n,replace=TRUE),collapse="")
+        if(runif(1,0,1)<P_ami){newsequence<-paste(newsequence,"a",sep="")}
+        if(runif(1,0,1)<P_pyr){newsequence<-paste("p",newsequence,sep="")}
+        decoydatabase[i,3]<-newsequence
+        decoydatabase[i,2]<-calculate_peptide_mass(newsequence)
+    }
+
+
+    ### now run a test:
+    if(plot==T)
+    {
+        if(size!=1){print("warning: plot only works for size 1 databases")}else{
+        uplimit<-1.2*max(abs(c(decoydatabase[,2],db[,2])))
+        lowlimit<-0.8*min(abs(c(decoydatabase[,2],db[,2])))
+        plot(sort(decoydatabase[,2]),sort(rep(db[,2],size)),xlab="decoy masses",ylab="real database masses",col="darkred",xlim=c(lowlimit,uplimit),ylim=c(lowlimit,uplimit))
+        abline(0,1)
+        }
+    }
+    if(verbose==T)
+    {
+      cat("Proportion pyroglutamination:\n")
+      print(round(P_pyr,4))
+      cat("Proportion amidation\n")
+      print(round(P_ami,4))
+    }
+    return(decoydatabase)
+}

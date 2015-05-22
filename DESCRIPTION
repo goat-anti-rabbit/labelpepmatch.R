@@ -1,0 +1,29 @@
+Package: labelpepmatch
+Title: Tools For Interpreting Mass Spectra With Labelled Peptides
+Description: This package 
+Version: 0.1
+Author: Rik Verdonck <rik.verdonck@bio.kuleuven.be>
+Maintainer: Rik Verdonck <rik.verdonck@bio.kuleuven.be>
+Depends: 
+  R (>= 2.11.0),
+  lme4
+Enhances:   
+  doMC,
+  doSNOW,
+  multcomp
+Imports:
+  bitops,
+  brew,
+  foreach,
+  influence.ME,
+  limma,
+  lsmeans,
+  plotrix,
+  plyr,
+  RCurl,
+  reshape2,
+  snow,
+  colorRamps,
+  gplots
+License: MIT  
+LazyData: true
