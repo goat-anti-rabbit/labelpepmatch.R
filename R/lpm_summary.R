@@ -22,8 +22,9 @@ function(input,graphics=F,run=1, printoutput=T )
 ### This function takes a table of the form table(charge,labelcount). NOT THE OTHER WAY AROUND!
 plotgrid<-function(tab,cex=1.5)
 {
+  plotgrid_z<-c(as.numeric(rownames(tab)))
 	plot(1,1,type="n",xlim=c(0.5,nrow(tab)+0.2),ylim=c(0.5,ncol(tab)+0.2),xlab="charges",ylab="labels",axes=F,main="Number of labels versus number of charges")    
-	axis(side=1, at=c(1:nrow(tab)), labels=c(1:nrow(tab)), pos=0.4,col="white")
+	axis(side=1, at=c(1:nrow(tab)), labels=plotgrid_z, pos=0.4,col="white")
 	axis(side=2, at=c(1:ncol(tab)), labels=c(1:ncol(tab)), pos=0.4,col="white",las=1)
 
 	for(i in 1:nrow(tab)-1)
@@ -38,7 +39,7 @@ plotgrid<-function(tab,cex=1.5)
 	{
 		for (j in 1:ncol(tab))
 		{
-			if(j>i){col="darkred"}else{col="darkgreen"}
+			if(j>plotgrid_z[i]){col="darkred"}else{col="darkgreen"}
 			if(tab[i,j]==0){col="white"}
 			text(i,j,labels=tab[i,j],col=col,cex=cex)
 		}
@@ -426,7 +427,7 @@ plotgrid<-function(tab,cex=1.5)
 			tab<-table(isID,input[[run]]$z_L)
 			tab[1,]<-(tab[1,]/sum(tab[1,]))*100
 			tab[2,]<-(tab[2,]/sum(tab[2,]))*100
-			pyramid.plot(tab[1,],tab[2,],lxcol="lightgreen",rxcol= "tomato",gap=10,main="Number of charges",unit="",top.labels=c("identified","","unidentified"),labelcex=0.7)
+			pyramid.plot(tab[1,],tab[2,],labels=c(as.numeric(colnames(tab))),lxcol="lightgreen",rxcol= "tomato",gap=10,main="Number of charges",unit="",top.labels=c("identified","","unidentified"),labelcex=0.7)
 			
 			### Pyramid plot for the number of labels
 			tab<-table(isID,input[[run]]$labelcount)
