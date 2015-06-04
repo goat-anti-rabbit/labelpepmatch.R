@@ -25,5 +25,9 @@ Imports:
   snow,
   colorRamps,
   gplots
+Suggests: 
+  knitr, 
+  rmarkdown
+VignetteBuilder: knitr
 License: GNU General Public License  
 LazyData: true

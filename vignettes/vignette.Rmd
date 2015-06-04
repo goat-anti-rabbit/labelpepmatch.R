@@ -4,10 +4,12 @@ author: "Rik Verdonck et al."
 date: '`r Sys.Date()`' 
 output: rmarkdown::html_vignette 
 vignette: |
-  %\VignetteIndexEntry{Vignette Title} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{Vignette Title} 
+  %\VignetteEngine{knitr::knitr} 
+  %\VignetteIndexEntry{labelpepmatch}
 ---
 ```{r load knitr, echo = FALSE}
-knitr::opts_chunk$set(collapse = T, comment = "#",cache=T,cache.path = 'test_files/',fig.path='figure/')
+knitr::opts_chunk$set(collapse = T, comment = "#",cache=T,cache.path = '.cache/',fig.path='.figure/')
 ```  
 <br/>
 <br/>
@@ -195,7 +197,7 @@ matched<-pepmatch(
   quantmin=2000,
   FDR=T,
   iterations=10,
-  cores=8
+  cores=1
 )
 ```
 
@@ -335,11 +337,11 @@ As mentioned earlier, the identification function that takes a `pepmatched` obje
 Finally, we here choose for 100 iterations of false discovery rate estimation. This means that for each run, 100 different databases will be generated with the `generate_random_db` function, and in each of them the identification frequency is recorded. This will yield a good estimate of the false discovery rate in a random peptide database. 
 
 ```{r pep.id_evaluated_with_3_iterations, eval=T,tidy=TRUE}
-matched_id<-pep.id  (pepmatched=matched,ID_thresh=0.1,db=db,cores=8,FDR=T,iterations=3)
+matched_id<-pep.id  (pepmatched=matched,ID_thresh=0.1,db=db,cores=1,FDR=T,iterations=3)
 ```
 
 ```{r pep.id_for_now_not_evaluated_with_100_iterations, eval=F,tidy=TRUE}
-matched_id<-pep.id  (pepmatched=matched,ID_thresh=0.1,presetdb="desertlocust",cores=8,FDR=T,iterations=100)
+matched_id<-pep.id  (pepmatched=matched,ID_thresh=0.1,presetdb="desertlocust",cores=1,FDR=T,iterations=100)
 ```
 
 
@@ -421,7 +423,7 @@ The `lpm_linearmodel` function contains two methods. The "vanilla" method runs a
 We will here focus on the use of the "vanilla" method. Don't forget to correct for multiple testing. Here, we use the Benjamini Hockberg procedure, but other multiple testing correction methods are also present. 
 
 ```{r make_linear_model,eval=T,tidy=TRUE}
-model<-lpm_linearmodel(statlist,method="vanilla",p.adjust.method="BH",cores=8)
+model<-lpm_linearmodel(statlist,method="vanilla",p.adjust.method="BH",cores=1)
 ``` 
 The `lpm_linearmodel` function outputs an object of class `lpm_linearmodel` that contains a data frame with all the model estimates and p-values per feature. 
 ```{r have_a_look_at_lpm_linearmodel,eval=T,tidy=TRUE}
