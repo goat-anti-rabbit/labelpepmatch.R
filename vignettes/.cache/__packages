@@ -3,10 +3,5 @@ Matrix
 Rcpp
 lme4
 labelpepmatch
-foreach
-iterators
-doMC
 limma
 MASS
-knitr
-markdown

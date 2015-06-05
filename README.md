@@ -95,6 +95,18 @@ vignette: |
 After installation, labelpepmatch can be loaded:
 
 
+```
+# Loading required package: lme4
+# Loading required package: Matrix
+# 
+# Attaching package: 'Matrix'
+# 
+# The following objects are masked from 'package:base':
+# 
+#     crossprod, tcrossprod
+# 
+# Loading required package: Rcpp
+```
 
 ```r
 library(labelpepmatch)
@@ -375,7 +387,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 1
 #    Name: A   Direction: Forward
 #    Number of peak pairs found     : 107
-#    Peak pair detection FDR        : 9.1   (8.5 %)
+#    Peak pair detection FDR        : 9.5   (8.9 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1080.0  1451.0  1631.0  1919.0  3803.0 
@@ -384,7 +396,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 2
 #    Name: B   Direction: Forward
 #    Number of peak pairs found     : 104
-#    Peak pair detection FDR        : 7.9   (7.6 %)
+#    Peak pair detection FDR        : 7.3   (7 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1038.0  1357.0  1599.0  1904.0  3355.0 
@@ -393,7 +405,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 3
 #    Name: C   Direction: Reverse
 #    Number of peak pairs found     : 122
-#    Peak pair detection FDR        : 9.5   (7.8 %)
+#    Peak pair detection FDR        : 9   (7.4 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1513.0  1706.0  2094.0  3803.0 
@@ -402,7 +414,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 4
 #    Name: D   Direction: Reverse
 #    Number of peak pairs found     : 122
-#    Peak pair detection FDR        : 8.3   (6.8 %)
+#    Peak pair detection FDR        : 6.5   (5.3 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1496.0  1686.0  2094.0  3803.0 
@@ -411,7 +423,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 5
 #    Name: E   Direction: Forward
 #    Number of peak pairs found     : 118
-#    Peak pair detection FDR        : 8.2   (7 %)
+#    Peak pair detection FDR        : 7   (5.9 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1104.0  1617.0  1725.0  2111.0  3803.0 
@@ -420,7 +432,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 6
 #    Name: F   Direction: Forward
 #    Number of peak pairs found     : 122
-#    Peak pair detection FDR        : 6.8   (5.6 %)
+#    Peak pair detection FDR        : 8.9   (7.3 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1104.0  1507.0  1690.0  2003.0  3803.0 
@@ -429,7 +441,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 7
 #    Name: G   Direction: Reverse
 #    Number of peak pairs found     : 119
-#    Peak pair detection FDR        : 9.6   (8.1 %)
+#    Peak pair detection FDR        : 8   (6.7 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1113.0  1513.0  1680.0  1992.0  3803.0 
@@ -438,7 +450,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 8
 #    Name: H   Direction: Reverse
 #    Number of peak pairs found     : 117
-#    Peak pair detection FDR        : 7.2   (6.2 %)
+#    Peak pair detection FDR        : 9.4   (8 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1513.0  1696.0  2059.0  3803.0
@@ -618,15 +630,15 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # label name:                1
 # minimum molecular weight:  132
 # minimum quantity:          2000
-# Peak pair detection FDR:   13.97
+# Peak pair detection FDR:   12.16
 # 
 # 
 # run: 1
 #    Name: A   Direction: Forward
 #    Number of peak pairs found       : 96
-#    Peak pair detection FDR          : 9.1	(8.5 %)
+#    Peak pair detection FDR          : 9.5	(8.9 %)
 #    Number of peptide identifications: 14
-#    Peptide identification FDR       : 0.7	(4.8 %)
+#    Peptide identification FDR       : 2	(14.3 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1136.0  1482.0  1674.0  1957.0  3803.0 
@@ -635,9 +647,9 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 2
 #    Name: B   Direction: Forward
 #    Number of peak pairs found       : 93
-#    Peak pair detection FDR          : 7.9	(7.6 %)
+#    Peak pair detection FDR          : 7.3	(7 %)
 #    Number of peptide identifications: 14
-#    Peptide identification FDR       : 2	(14.3 %)
+#    Peptide identification FDR       : 0.7	(4.8 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1513.0  1666.0  2059.0  3355.0 
@@ -646,7 +658,7 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 3
 #    Name: C   Direction: Reverse
 #    Number of peak pairs found       : 107
-#    Peak pair detection FDR          : 9.5	(7.8 %)
+#    Peak pair detection FDR          : 9	(7.4 %)
 #    Number of peptide identifications: 13
 #    Peptide identification FDR       : 2	(15.4 %)
 #    Distribution of deconvoluted MW: 
@@ -657,9 +669,9 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 4
 #    Name: D   Direction: Reverse
 #    Number of peak pairs found       : 109
-#    Peak pair detection FDR          : 8.3	(6.8 %)
+#    Peak pair detection FDR          : 6.5	(5.3 %)
 #    Number of peptide identifications: 14
-#    Peptide identification FDR       : 2.7	(19.1 %)
+#    Peptide identification FDR       : 0.7	(4.8 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1158.0  1513.0  1746.0  2245.0  3803.0 
@@ -668,9 +680,9 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 5
 #    Name: E   Direction: Forward
 #    Number of peak pairs found       : 107
-#    Peak pair detection FDR          : 8.2	(7 %)
+#    Peak pair detection FDR          : 7	(5.9 %)
 #    Number of peptide identifications: 14
-#    Peptide identification FDR       : 3.3	(23.8 %)
+#    Peptide identification FDR       : 1.3	(9.5 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1140.0  1645.0  1774.0  2336.0  3803.0 
@@ -679,9 +691,9 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 6
 #    Name: F   Direction: Forward
 #    Number of peak pairs found       : 109
-#    Peak pair detection FDR          : 6.8	(5.6 %)
+#    Peak pair detection FDR          : 8.9	(7.3 %)
 #    Number of peptide identifications: 15
-#    Peptide identification FDR       : 2.7	(17.8 %)
+#    Peptide identification FDR       : 3	(20 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1141.0  1541.0  1750.0  2146.0  3803.0 
@@ -690,9 +702,9 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 7
 #    Name: G   Direction: Reverse
 #    Number of peak pairs found       : 105
-#    Peak pair detection FDR          : 9.6	(8.1 %)
+#    Peak pair detection FDR          : 8	(6.7 %)
 #    Number of peptide identifications: 14
-#    Peptide identification FDR       : 1.7	(11.9 %)
+#    Peptide identification FDR       : 2.3	(16.7 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1139.0  1541.0  1736.0  2112.0  3803.0 
@@ -701,9 +713,9 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 # run: 8
 #    Name: H   Direction: Reverse
 #    Number of peak pairs found       : 107
-#    Peak pair detection FDR          : 7.2	(6.2 %)
+#    Peak pair detection FDR          : 9.4	(8 %)
 #    Number of peptide identifications: 14
-#    Peptide identification FDR       : 0.7	(4.8 %)
+#    Peptide identification FDR       : 1.7	(11.9 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1140.0  1541.0  1744.0  2129.0  3803.0
@@ -882,16 +894,24 @@ We will here focus on the use of the "vanilla" method. Don't forget to correct f
 ```r
 model <- lpm_linearmodel(statlist, method = "vanilla", p.adjust.method = "BH", 
     cores = 1)
-# Error in {: task 1 failed - "argument "label" is missing, with no default"
 ```
 The `lpm_linearmodel` function outputs an object of class `lpm_linearmodel` that contains a data frame with all the model estimates and p-values per feature. 
 
 ```r
 summary(model)
-# Error in summary(model): error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'model' not found
+#        Length Class      Mode
+# model  46     data.frame list
+# design  5     data.frame list
 knitr::kable(head(model$model, 3), digits = 3)
-# Error in head(model$model, 3): error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'model' not found
 ```
+
+
+
+|            | pval.adj|     FC| pval| logpval| labelpval| labelbeta| SW_normality| SW_pval| Cooks|samplename_L |  ID_L| z_L|    mz_L|  ret_L|      m_L|samplename_H |  ID_H| z_H|    mz_H|  ret_H|      m_H|       MW| labelcount| precision|isID  |pepID    |pepseq          |  pepmass| delta_m| N_identifications| labelresidsolA| labelresidsolB| labelresidsolC| labelresidsolD| labelresidsolE| labelresidsolF| labelresidsolG| labelresidsolH| labelresidgregA| labelresidgregB| labelresidgregC| labelresidgregD| labelresidgregE| labelresidgregF| labelresidgregG| labelresidgregH|
+|:-----------|--------:|------:|----:|-------:|---------:|---------:|------------:|-------:|-----:|:------------|-----:|---:|-------:|------:|--------:|:------------|-----:|---:|-------:|------:|--------:|--------:|----------:|---------:|:-----|:--------|:---------------|--------:|-------:|-----------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|---------------:|---------------:|---------------:|---------------:|---------------:|---------------:|---------------:|---------------:|
+|36145_36143 |    0.001| -1.216|    0|   4.771|         0|    -1.232|        0.980|   0.961| 0.604|NA           | 36145|   2| 530.813| 21.630| 1059.611|NA           | 36143|   2| 535.342| 21.630| 1068.670|  932.503|          1|     0.003| TRUE |Scg-PK-4 |EGDFTPRLa       |  932.476|  -0.026|                 1|          0.047|          0.068|          0.563|          0.785|         -0.304|          1.304|          0.892|          1.509|          -1.328|          -1.284|           0.034|          -0.584|          -0.830|          -0.307|          -0.750|           0.186|
+|544_1384    |    0.003| -0.852|    0|   4.027|         0|    -1.258|        0.972|   0.872| 0.788|NA           |   544|   4| 760.171| 31.173| 3036.656|NA           |  1384|   4| 762.440| 31.141| 3045.731| 2909.556|          1|     0.020|FALSE |NA       |NA              |       NA|      NA|                 0|          0.020|          0.705|          0.351|          0.914|          0.366|          0.667|         -0.301|          0.686|          -0.621|          -0.415|          -0.217|          -0.105|           0.167|          -0.782|          -1.231|          -0.204|
+|271_36140   |    0.003| -0.918|    0|   3.880|         0|    -1.400|        0.935|   0.291| 0.588|NA           |   271|   3| 591.664| 28.896| 1771.971|NA           | 36140|   3| 594.688| 28.896| 1781.043| 1644.869|          1|     0.017| TRUE |Scg-PK-5 |DSSEDWAQPFVPRLa | 1644.794|  -0.074|                 1|         -0.109|          0.182|          0.353|          1.227|          0.485|          0.357|          0.462|          0.716|          -0.987|          -1.192|           0.043|           0.305|           0.246|          -0.824|          -0.773|          -0.490|
 
 
 #### Visualizing the statistics after analysis<a id="6.5"></a>
@@ -901,8 +921,9 @@ The standard way for visualisation of this kind of data is a volcano plot. Here,
 
 ```r
 lpm_volcanoplot(model, plotlocator = F)
-# Error in unique(x$design$LightCondition[x$design$Direction == "F"]): object 'model' not found
 ```
+
+![plot of chunk volcanoplot](.figure/volcanoplot-1.png) 
 <br/>
 Features in the blue zone have a corrected p-value lower than 0.05, features in the green zone have a corrected p-value lower than 0.01. Red dots indicate features with identifications through mass match. For more information on the interpretation of this specific volcanoplot, we refer to Verdonck et al. 
 
@@ -917,14 +938,16 @@ Remember that we sometimes have to cope with label effects. Hence, a heatmap wit
 
 ```r
 lpm_heatmap(model, FCcutoff = 1.25, main = "HM on residuals")
-# Error in lpm_heatmap(model, FCcutoff = 1.25, main = "HM on residuals"): object 'model' not found
 ```
+
+![plot of chunk heatmap_on_residuals](.figure/heatmap_on_residuals-1.png) 
 
 
 ```r
 lpm_heatmap(model, FCcutoff = 1.25, contrasts = T, main = "HM on res. contrasts")
-# Error in lpm_heatmap(model, FCcutoff = 1.25, contrasts = T, main = "HM on res. contrasts"): object 'model' not found
 ```
+
+![plot of chunk heatmap_on_residual_contrasts](.figure/heatmap_on_residual_contrasts-1.png) 
 
 Looking at either of these heatmaps, one would not be able to infer the labeling direction of different replicates. This would be different if we were to make a heatmap using the raw quantities. In other words: the label effect has been effectively cancelled out by using the residuals of the linear model. Also, it is clear that using the above mentioned cutoffs, we observe 3 times more upregulations in solitarious than in gregarious locusts. This is an observation we already made looking at the volcano plot, but here we get a more detailed view on the most interesting features. 
 
@@ -942,7 +965,8 @@ For example, when we look at the constrast heat map, we clearly see that not all
 ### 'Scg-PK-5' ,c(18,22,23,26,27)]
 model$model[rownames(model$model) %in% c("347_954", "65_195", "524_1514", "210_535", 
     "217_538", "8337_86"), c(18, 22, 23, 26, 27)]
-# Error in eval(expr, envir, enclos): object 'model' not found
+# [1] z_H        MW         labelcount pepID      pepseq    
+# <0 rows> (or 0-length row.names)
 ```
 
 This closer look gives away that we are actually looking at only 3 different peptides, with charges ranging between 2 and 4. Most probabily, since the patterns of expression for the 1644 Da and the 2909 Da peptides align so well, we are looking at a longer isoform or precursor of the Scg-PK-5 peptide. 
@@ -964,16 +988,59 @@ Since limma is a very elaborate package, a detailled overview of every function 
 
 ```r
 RG1 <- lpm_make.RGList(statlist)
-# Error in lpm_make.RGList(statlist): object 'statlist' not found
 summary(RG1)
-# Error in summary(RG1): error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'RG1' not found
+#         Length Class      Mode   
+# R       648    -none-     numeric
+# G       648    -none-     numeric
+# Rb      648    -none-     numeric
+# Gb      648    -none-     numeric
+# genes     2    data.frame list   
+# targets   6    data.frame list
 knitr::kable(head(RG1$R))
-# Error in head(RG1$R): error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'RG1' not found
-knitr::kable(head(RG1$Rb))
-# Error in head(RG1$Rb): error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'RG1' not found
-knitr::kable(RG1$targets)
-# Error in is.data.frame(x): object 'RG1' not found
 ```
+
+
+
+|            |      A|      B|      C|      D|      E|      F|      G|      H|
+|:-----------|------:|------:|------:|------:|------:|------:|------:|------:|
+|36212_36213 | 116024| 112536| 111252|  54176| 192316|  35112|  37644|  55584|
+|36056_36057 | 324800| 341052| 651596| 565816| 684764| 655308| 723340| 471500|
+|36050_36285 | 142104| 121420| 298784| 246640| 313028| 268124| 258608| 182780|
+|36054_36053 |  72696|  65208| 143920| 146384| 166268| 138832| 153808|  93200|
+|36070_36071 | 143180| 124328| 265376| 228068| 232064| 235380| 154376| 140480|
+|36058_36059 |  89072| 140664| 134048| 168468| 343804| 164996| 196600| 220812|
+
+```r
+knitr::kable(head(RG1$Rb))
+```
+
+
+
+|            |  A|  B|  C|  D|  E|  F|  G|  H|
+|:-----------|--:|--:|--:|--:|--:|--:|--:|--:|
+|36212_36213 |  0|  0|  0|  0|  0|  0|  0|  0|
+|36056_36057 |  0|  0|  0|  0|  0|  0|  0|  0|
+|36050_36285 |  0|  0|  0|  0|  0|  0|  0|  0|
+|36054_36053 |  0|  0|  0|  0|  0|  0|  0|  0|
+|36070_36071 |  0|  0|  0|  0|  0|  0|  0|  0|
+|36058_36059 |  0|  0|  0|  0|  0|  0|  0|  0|
+
+```r
+knitr::kable(RG1$targets)
+```
+
+
+
+| RunNumber|Samplenames |FileName                                      | RunNumber|Cy3  |Cy5  |
+|---------:|:-----------|:---------------------------------------------|---------:|:----|:----|
+|         1|A           |exported_featuredata_schistoTMAB2011_2015.csv |         1|greg |sol  |
+|         2|B           |exported_featuredata_schistoTMAB2011_2015.csv |         2|greg |sol  |
+|         3|C           |exported_featuredata_schistoTMAB2011_2015.csv |         3|sol  |greg |
+|         4|D           |exported_featuredata_schistoTMAB2011_2015.csv |         4|sol  |greg |
+|         5|E           |exported_featuredata_schistoTMAB2011_2015.csv |         5|greg |sol  |
+|         6|F           |exported_featuredata_schistoTMAB2011_2015.csv |         6|greg |sol  |
+|         7|G           |exported_featuredata_schistoTMAB2011_2015.csv |         7|sol  |greg |
+|         8|H           |exported_featuredata_schistoTMAB2011_2015.csv |         8|sol  |greg |
 
 Note that in the limma syntax, the two channels are called "red" (corresponds to cy5) and "green" (corresponds to cy3). And, for consistency reasons, we will always call the light channel "red" and the heavy channel "green". (note to self: nakijken, volgens mij doet het script het nog niet consistent nu)Since our mass spectrum does not really have a background signal, the background matrices are zero matrices. 
 
@@ -981,12 +1048,16 @@ Next, we turn this object in an `MAList` object and plot
 
 ```r
 MA1 = MA.RG(RG1, bc.method = "subtract", offset = 0)
-# Error in MA.RG(RG1, bc.method = "subtract", offset = 0): object 'RG1' not found
 summary(MA1)
-# Error in summary(MA1): error in evaluating the argument 'object' in selecting a method for function 'summary': Error: object 'MA1' not found
+#         Length Class      Mode   
+# genes     2    data.frame list   
+# targets   6    data.frame list   
+# M       648    -none-     numeric
+# A       648    -none-     numeric
 limma::plotMA(MA1, array = 1)
-# Error in limma::plotMA(MA1, array = 1): object 'MA1' not found
 ```
+
+![plot of chunk make_MAList_object](.figure/make_MAList_object-1.png) 
 
 #### Within run normalisation<a id="7.3"></a>
 
@@ -995,17 +1066,18 @@ In the MA plots there should be no systematic trends as a function of quantity: 
 
 ```r
 MA2 = normalizeWithinArrays(RG1, method = "robustspline", bc.method = "none")
-# Error in is(object, "MAList"): object 'RG1' not found
+# Loading required package: MASS
+# Loading required package: splines
 # method='loess' for loess normalisation, this is if label effects are
 # quantity dependent, if this is not the case use 'median', 'robustspline'
 # can be alternative for 'loess'
 RG2 = RG.MA(MA2)
-# Error in RG.MA(MA2): object 'MA2' not found
 # these would be the corresponding normalised R and G values backtransformed
 # onto the original scale
 limma::plotMA(MA2, array = 1)
-# Error in limma::plotMA(MA2, array = 1): object 'MA2' not found
 ```
+
+![plot of chunk normalize_within_arrays](.figure/normalize_within_arrays-1.png) 
 
 
 #### Between run normalisation<a id="7.4"></a>
@@ -1015,11 +1087,9 @@ To make the different runs as comparable as possible, we can also apply between 
 
 ```r
 MA3 = normalizeBetweenArrays(MA2, method = "quantile")
-# Error in is(object, "matrix"): object 'MA2' not found
 # most drastic normalisation would be 'quantile', 'Aquantile' would be less
 # drastic
 RG3 = RG.MA(MA3)
-# Error in RG.MA(MA3): object 'MA3' not found
 # these would be the corresponding normalised R and G values backtransformed
 # onto the original scale
 
@@ -1027,19 +1097,15 @@ RG3 = RG.MA(MA3)
 # distribution of the R and G intensities:
 par(mfrow = c(2, 3))  # now we make a grid with 1 row and 3 columns
 plotDensities(RG1)  # raw, Agilent preprocessed R and G intensities
-# Error in plotDensities(RG1): object 'RG1' not found
 plotDensities(RG2)  # after loess within-array normalisation
-# Error in plotDensities(RG2): object 'RG2' not found
 plotDensities(RG3)  # after loess+Aquantile between-array normalisation
-# Error in plotDensities(RG3): object 'RG3' not found
 
 plotDensities(MA1)  # raw, Agilent preprocessed R and G intensities
-# Error in plotDensities(MA1): object 'MA1' not found
 plotDensities(MA2)  # after loess within-array normalisation
-# Error in plotDensities(MA2): object 'MA2' not found
 plotDensities(MA3)  # after loess+Aquantile between-array normalisation
-# Error in plotDensities(MA3): object 'MA3' not found
 ```
+
+![plot of chunk normalize_between_arrays](.figure/normalize_between_arrays-1.png) 
 
 Notice how the two "channels" are normalized towards each other. This is a very powerful normalization and it should be emphasized that this is probabily not necessary in every situation. (Tom, jij hier misschien nog wat info over? )
 
@@ -1052,17 +1118,23 @@ Now we know how to create an RG list object and normalize it, there are ample po
 
 design = model.matrix(as.formula("~ Cy3"), data = RG2$targets, contrasts = list(Cy3 = "contr.sum"))[, 
     2]
-# Error in terms.formula(object, data = data): object 'RG2' not found
 fit = lmFit(MA2, design, ndups = 1, block = NULL)
-# Error in is(object, "list"): object 'MA2' not found
 fit.eb = eBayes(fit, proportion = 0.1)
-# Error in ebayes(fit = fit, proportion = proportion, stdev.coef.lim = stdev.coef.lim, : object 'fit' not found
 stats = topTable(fit.eb, coef = 1, number = 100, adjust.method = "BH", genelist = fit$genes, 
     sort.by = "p")
-# Error in is(fit, "MArrayLM"): object 'fit.eb' not found
 knitr::kable(head(stats), digits = 3)
-# Error in head(stats): error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'stats' not found
 ```
+
+
+
+|            |ID          |Name     |  logFC| AveExpr|      t| P.Value| adj.P.Val|     B|
+|:-----------|:-----------|:--------|------:|-------:|------:|-------:|---------:|-----:|
+|205_926     |205_926     |unknown  | -0.801|  14.649| -4.054|   0.003|     0.091| 1.137|
+|36145_36143 |36145_36143 |Scg-PK-4 |  0.799|  17.150|  4.043|   0.003|     0.091| 1.123|
+|1761_2474   |1761_2474   |unknown  |  0.736|  12.482|  3.866|   0.003|     0.091| 0.886|
+|271_36140   |271_36140   |Scg-PK-5 |  0.808|  14.906|  3.494|   0.006|     0.099| 0.376|
+|283_1264    |283_1264    |unknown  | -0.639|  14.239| -3.401|   0.007|     0.099| 0.245|
+|36015_127   |36015_127   |Scg-PK-5 |  0.566|  17.239|  3.340|   0.008|     0.099| 0.159|
 
 
 
