@@ -1,13 +1,4 @@
----
-title: "labelpepmatch"
-author: "Rik Verdonck et al."
-date: '2015-06-05' 
-output: rmarkdown::html_vignette 
-vignette: |
-  %\VignetteIndexEntry{Vignette Title} 
-  %\VignetteEngine{knitr::knitr} 
-  %\VignetteIndexEntry{labelpepmatch}
----
+# Labelpepmatch
 
 <br/>
 <br/>

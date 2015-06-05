@@ -17,7 +17,7 @@
 #' @param graphics       Only applies when FDR is TRUE.   
 #' @param verbose        Logical. If TRUE verbose output is generated during identifications. 
 #' @export
-#' @exportClass pepmatched
+#' @exportClass pep_massmatched
 #' @return An object of class \code{pepmatched} that can be used for subsequent analysis using labelpepmatch functions.
 
 ### TO DO: plot functie werkt nog niet. Heb ze voorlopig uitgeschakeld. 

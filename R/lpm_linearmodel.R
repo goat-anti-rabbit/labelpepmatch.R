@@ -14,6 +14,8 @@
 #' @importFrom influence.ME influence
 #' @import lme4 
 #' @import lsmeans 
+#' @import foreach
+#' @import doParallel
 # @import multcomp this has given problems all over the place...
 #' @exportClass lpm_linearmodel
 #' @export

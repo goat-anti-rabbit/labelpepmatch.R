@@ -17,6 +17,8 @@
 #' @param graphics       Only applies when FDR is TRUE.   
 #' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading. 
 #' @param verbose        Logical. If TRUE, verbose output is generated during identifications. 
+#' @import foreach
+#' @import doParallel
 #' @export
 #' @exportClass pepmatched
 #' @return An object of class \code{pepmatched} with added mass matches that can be used for subsequent analysis using labelpepmatch functions. 

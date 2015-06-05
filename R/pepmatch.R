@@ -21,6 +21,7 @@
 #' @import bitops
 #' @import brew
 #' @import foreach
+#' @import doParallel
 #' @export
 #' @exportClass pepmatched
 #' @return An object of class \code{pepmatched} without mass matchings. This object can serve as an imput to the \code{pep.id} function, or in case of no mass matching, can go directly in \code{make.statlist}. 
