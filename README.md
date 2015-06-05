@@ -265,7 +265,7 @@ lpm_summary(schistocerca_tmab, run=0, graphics=T)
 #  Max.   :47.86   Max.   :47.52   Max.   :47.63   Max.   :47.49
 ```
 
-![plot of chunk lpm_summary_of_lpm_input_object](.figure/lpm_summary_of_lpm_input_object-1.png) 
+![plot of chunk lpm_summary_of_lpm_input_object](vignettes/.figure/lpm_summary_of_lpm_input_object-1.png) 
 
 Notice that the output is rather extensive and consists of basic information on experiment design, origin of the data and some summary statistics of the data. The figures give a more graphical overview of the specific run.^[If one wants to compare multiple runs graphically without graphic output in the terminal, the `lpm_summary` function can be run with `printoutput=F`] 
 
@@ -274,7 +274,7 @@ Notice that the output is rather extensive and consists of basic information on 
 lpm_summary(schistocerca_tmab, run=2, graphics=T, printoutput=F)
 ```
 
-![plot of chunk lpm_summary_of_lpm_input_object_run1](.figure/lpm_summary_of_lpm_input_object_run1-1.png) 
+![plot of chunk lpm_summary_of_lpm_input_object_run1](vignettes/.figure/lpm_summary_of_lpm_input_object_run1-1.png) 
 
 Some observations that can be made here:
 
@@ -456,7 +456,7 @@ lpm_summary(matched, run=1, graphics=T)
 #   295.2  1130.0  1513.0  1696.0  2059.0  3803.0
 ```
 
-![plot of chunk lpm_summary_of_pepmatched_object](.figure/lpm_summary_of_pepmatched_object-1.png) 
+![plot of chunk lpm_summary_of_pepmatched_object](vignettes/.figure/lpm_summary_of_pepmatched_object-1.png) 
 Note that the observed mass precision for peak pair detection is a symmetric distribution with the maximum around 0 and bilaterally bounded by `labelthresh`. Systematic error, if any, turns out to be minor. Notice that also for the false discovery rate tested peak pairs, the distribution is not uniform. This is expected since mock features in the mock database look like real labelled peptides and hence their masses are non random.
 <br/>
 
@@ -480,7 +480,7 @@ And have a look at the output again (this time without printing in the terminal)
 lpm_summary(matched, printoutput = F, run=1, graphics=T)
 ```
 
-![plot of chunk lpm_summary_of_refined_pepmatched_object](.figure/lpm_summary_of_refined_pepmatched_object-1.png) 
+![plot of chunk lpm_summary_of_refined_pepmatched_object](vignettes/.figure/lpm_summary_of_refined_pepmatched_object-1.png) 
 
 Note that compared with the first version of our `pepmatched` object, 24 out of 202 features were discarded, among them, 4 out of 10 features with more labels than charges disappeared, which is another confirmation that we were mainly discarding false positives. Since we expect all of them to be false positives anyway, we can do:
 
@@ -528,7 +528,7 @@ And a function to quality check this database. This function recalculates all mo
 QC_database(db)
 ```
 
-![plot of chunk QC_atabase](.figure/QC_atabase-1.png) 
+![plot of chunk QC_atabase](vignettes/.figure/QC_atabase-1.png) 
 
 ```
 #  [1]  2.273737e-13  2.273737e-13  0.000000e+00  0.000000e+00  0.000000e+00
@@ -559,7 +559,7 @@ It is also possible to generate a mock database of peptides with a restricted ra
 randomdb<-generate_random_db(db,plot=T)
 ```
 
-![plot of chunk random_database](.figure/random_database-1.png) 
+![plot of chunk random_database](vignettes/.figure/random_database-1.png) 
 
 #### Mass matching peptides to a database<a id="4.3"></a>
 Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 0.1 Dalton interval. 
@@ -721,7 +721,7 @@ lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 #   295.2  1140.0  1541.0  1744.0  2129.0  3803.0
 ```
 
-![plot of chunk lpm_summary_of_pepmatched_object_with_mass_matches](.figure/lpm_summary_of_pepmatched_object_with_mass_matches-1.png) 
+![plot of chunk lpm_summary_of_pepmatched_object_with_mass_matches](vignettes/.figure/lpm_summary_of_pepmatched_object_with_mass_matches-1.png) 
 A total of 14 different neuropeptides have been mass matched to peak pairs, 12 of which in all runs. The estimated false discovery rate is around 20%. If identifications are considered a strong signal for genuine labelled peptides, it is interesting to remark that we observe the identified peptides to have a slightly higher quantity, both for light and heavy labelled peptides. Notice that the bias for the light labelled peptides to have a higher quantity is also clearly visible. Also we observe that most of the identified peptides appear to have very minor differences in retention time within the peak pair. 
 
 Identified peptides have charges between one and three with a preference for double charges, and one single label. Looking deeper in the data, we notice that the same peptides are found both in single, double and triple charged form:
@@ -769,21 +769,21 @@ Preprocessing software usually offers a "top view" on mass spectra where feature
 view_spectra(schistocerca_tmab,run=1)
 ```
 
-![plot of chunk view_spectra](.figure/view_spectra-1.png) 
+![plot of chunk view_spectra](vignettes/.figure/view_spectra-1.png) 
 
 ```r
 ## The "pepmatched" object without identifications
 view_spectra(schistocerca_tmab,matched,run=1)
 ```
 
-![plot of chunk view_spectra](.figure/view_spectra-2.png) 
+![plot of chunk view_spectra](vignettes/.figure/view_spectra-2.png) 
 
 ```r
 ## The "pepmatched" object with identifications
 view_spectra(schistocerca_tmab,matched_id,run=1)
 ```
 
-![plot of chunk view_spectra](.figure/view_spectra-3.png) 
+![plot of chunk view_spectra](vignettes/.figure/view_spectra-3.png) 
 
 
 
@@ -867,7 +867,7 @@ lpm_summary(statlist, graphics = T)
 # Max.    0.92 -0.08 -1.28 -2.02 -0.03 0.87 -0.16 -0.39
 ```
 
-![plot of chunk inspect_lpm_statlist_object](.figure/inspect_lpm_statlist_object-1.png) 
+![plot of chunk inspect_lpm_statlist_object](vignettes/.figure/inspect_lpm_statlist_object-1.png) 
 
 Here again, we observe a clear difference in quantity between light and heavy labelled peptides, but no overall trends between the conditions. This is a typical picture that is seen in many high throughput technologies: most features show no difference, and there might be a "channel"" effect (e.g. in micro array studies, a dye effect). As long as the experimental design is balanced (i.e. with the labelling directions equally distributed over conditions), this should be no problem. Either, the label effect can be normalized, or label effect can be added as a covariate in a linear model. 
 
@@ -879,7 +879,7 @@ The statlist object can also be visualized with MA-plots. These are plots of the
 lpm_MAplot(statlist, loess_span = 1)
 ```
 
-![plot of chunk MA_plot](.figure/MA_plot-1.png) 
+![plot of chunk MA_plot](vignettes/.figure/MA_plot-1.png) 
 When we compare all runs, we consistently observe the same overall label bias, but the structure of the bias along A-axis seems more or less random. This suggests that the label effect is not dependent on quantity. 
 
 
@@ -923,7 +923,7 @@ The standard way for visualisation of this kind of data is a volcano plot. Here,
 lpm_volcanoplot(model, plotlocator = F)
 ```
 
-![plot of chunk volcanoplot](.figure/volcanoplot-1.png) 
+![plot of chunk volcanoplot](vignettes/.figure/volcanoplot-1.png) 
 <br/>
 Features in the blue zone have a corrected p-value lower than 0.05, features in the green zone have a corrected p-value lower than 0.01. Red dots indicate features with identifications through mass match. For more information on the interpretation of this specific volcanoplot, we refer to Verdonck et al. 
 
@@ -940,14 +940,14 @@ Remember that we sometimes have to cope with label effects. Hence, a heatmap wit
 lpm_heatmap(model, FCcutoff = 1.25, main = "HM on residuals")
 ```
 
-![plot of chunk heatmap_on_residuals](.figure/heatmap_on_residuals-1.png) 
+![plot of chunk heatmap_on_residuals](vignettes/.figure/heatmap_on_residuals-1.png) 
 
 
 ```r
 lpm_heatmap(model, FCcutoff = 1.25, contrasts = T, main = "HM on res. contrasts")
 ```
 
-![plot of chunk heatmap_on_residual_contrasts](.figure/heatmap_on_residual_contrasts-1.png) 
+![plot of chunk heatmap_on_residual_contrasts](vignettes/.figure/heatmap_on_residual_contrasts-1.png) 
 
 Looking at either of these heatmaps, one would not be able to infer the labeling direction of different replicates. This would be different if we were to make a heatmap using the raw quantities. In other words: the label effect has been effectively cancelled out by using the residuals of the linear model. Also, it is clear that using the above mentioned cutoffs, we observe 3 times more upregulations in solitarious than in gregarious locusts. This is an observation we already made looking at the volcano plot, but here we get a more detailed view on the most interesting features. 
 
@@ -1057,7 +1057,7 @@ summary(MA1)
 limma::plotMA(MA1, array = 1)
 ```
 
-![plot of chunk make_MAList_object](.figure/make_MAList_object-1.png) 
+![plot of chunk make_MAList_object](vignettes/.figure/make_MAList_object-1.png) 
 
 #### Within run normalisation<a id="7.3"></a>
 
@@ -1077,7 +1077,7 @@ RG2 = RG.MA(MA2)
 limma::plotMA(MA2, array = 1)
 ```
 
-![plot of chunk normalize_within_arrays](.figure/normalize_within_arrays-1.png) 
+![plot of chunk normalize_within_arrays](vignettes/.figure/normalize_within_arrays-1.png) 
 
 
 #### Between run normalisation<a id="7.4"></a>
@@ -1105,7 +1105,7 @@ plotDensities(MA2)  # after loess within-array normalisation
 plotDensities(MA3)  # after loess+Aquantile between-array normalisation
 ```
 
-![plot of chunk normalize_between_arrays](.figure/normalize_between_arrays-1.png) 
+![plot of chunk normalize_between_arrays](vignettes/.figure/normalize_between_arrays-1.png) 
 
 Notice how the two "channels" are normalized towards each other. This is a very powerful normalization and it should be emphasized that this is probabily not necessary in every situation. (Tom, jij hier misschien nog wat info over? )
 
