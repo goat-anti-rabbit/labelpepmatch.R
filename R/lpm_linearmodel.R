@@ -209,7 +209,7 @@ if(cores==1)                                                    ###
                                                                 ###
     LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %do%            				    ###     
     {                                                           ###    
-        lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4)   	###
+        lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4,design,label)   	###
         return(lmlist)                                       	###                         
     }                                                           ###
 }else # parallel !                                              ###            

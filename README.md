@@ -375,7 +375,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 1
 #    Name: A   Direction: Forward
 #    Number of peak pairs found     : 107
-#    Peak pair detection FDR        : 7   (6.5 %)
+#    Peak pair detection FDR        : 9.1   (8.5 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1080.0  1451.0  1631.0  1919.0  3803.0 
@@ -384,7 +384,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 2
 #    Name: B   Direction: Forward
 #    Number of peak pairs found     : 104
-#    Peak pair detection FDR        : 8.5   (8.2 %)
+#    Peak pair detection FDR        : 7.9   (7.6 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1038.0  1357.0  1599.0  1904.0  3355.0 
@@ -393,7 +393,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 3
 #    Name: C   Direction: Reverse
 #    Number of peak pairs found     : 122
-#    Peak pair detection FDR        : 8.6   (7 %)
+#    Peak pair detection FDR        : 9.5   (7.8 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1513.0  1706.0  2094.0  3803.0 
@@ -402,7 +402,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 4
 #    Name: D   Direction: Reverse
 #    Number of peak pairs found     : 122
-#    Peak pair detection FDR        : 8   (6.6 %)
+#    Peak pair detection FDR        : 8.3   (6.8 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1496.0  1686.0  2094.0  3803.0 
@@ -411,7 +411,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 5
 #    Name: E   Direction: Forward
 #    Number of peak pairs found     : 118
-#    Peak pair detection FDR        : 7.6   (6.4 %)
+#    Peak pair detection FDR        : 8.2   (7 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1104.0  1617.0  1725.0  2111.0  3803.0 
@@ -420,7 +420,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 6
 #    Name: F   Direction: Forward
 #    Number of peak pairs found     : 122
-#    Peak pair detection FDR        : 8.5   (7 %)
+#    Peak pair detection FDR        : 6.8   (5.6 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1104.0  1507.0  1690.0  2003.0  3803.0 
@@ -429,7 +429,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 7
 #    Name: G   Direction: Reverse
 #    Number of peak pairs found     : 119
-#    Peak pair detection FDR        : 7   (5.9 %)
+#    Peak pair detection FDR        : 9.6   (8.1 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1113.0  1513.0  1680.0  1992.0  3803.0 
@@ -438,7 +438,7 @@ lpm_summary(matched, run=1, graphics=T)
 # run: 8
 #    Name: H   Direction: Reverse
 #    Number of peak pairs found     : 117
-#    Peak pair detection FDR        : 7.8   (6.7 %)
+#    Peak pair detection FDR        : 7.2   (6.2 %)
 #    Distribution of deconvoluted MW: 
 #    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #   295.2  1130.0  1513.0  1696.0  2059.0  3803.0
@@ -588,8 +588,128 @@ The output of this function will still be of the same `pepmatched` class, but wi
 
 ```r
 lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
-# Error in lpm_summary(matched_id, printoutput = T, run = 1, graphics = T): object 'matched_id' not found
+# 
+#        Object of class "pepmatched" with identified peptides and 8 runs:
+#        -----------------------------------------------------------------
+# ID threshold used for peptide identification: 0.1
+# 
+# Identified peptides:
+#                  idpep Freq
+# 1        Scg-AKH-JP-1    8
+# 2        Scg-AKH-JP-2    8
+# 3           Scg-FLRFa    8
+# 4  Scg-IRP-co-peptide    8
+# 5  Scg-ITP-co-peptide    4
+# 6            Scg-OK-1    8
+# 7            Scg-PK-1    8
+# 8            Scg-PK-4    8
+# 9            Scg-PK-5    8
+# 10          Scg-PKL-2    8
+# 11           Scg-TK-3    8
+# 
+# 
+# parameters used for matching peak pairs:
+# 
+# elution threshold:         0.15
+# label threshold:           0.05
+# maximal number of labels:  5
+# light label mass:          128.1177
+# heavy label mass:          137.1728
+# label name:                1
+# minimum molecular weight:  132
+# minimum quantity:          2000
+# Peak pair detection FDR:   13.97
+# 
+# 
+# run: 1
+#    Name: A   Direction: Forward
+#    Number of peak pairs found       : 96
+#    Peak pair detection FDR          : 9.1	(8.5 %)
+#    Number of peptide identifications: 14
+#    Peptide identification FDR       : 0.7	(4.8 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1136.0  1482.0  1674.0  1957.0  3803.0 
+# 
+# 
+# run: 2
+#    Name: B   Direction: Forward
+#    Number of peak pairs found       : 93
+#    Peak pair detection FDR          : 7.9	(7.6 %)
+#    Number of peptide identifications: 14
+#    Peptide identification FDR       : 2	(14.3 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1130.0  1513.0  1666.0  2059.0  3355.0 
+# 
+# 
+# run: 3
+#    Name: C   Direction: Reverse
+#    Number of peak pairs found       : 107
+#    Peak pair detection FDR          : 9.5	(7.8 %)
+#    Number of peptide identifications: 13
+#    Peptide identification FDR       : 2	(15.4 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1161.0  1589.0  1765.0  2232.0  3803.0 
+# 
+# 
+# run: 4
+#    Name: D   Direction: Reverse
+#    Number of peak pairs found       : 109
+#    Peak pair detection FDR          : 8.3	(6.8 %)
+#    Number of peptide identifications: 14
+#    Peptide identification FDR       : 2.7	(19.1 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1158.0  1513.0  1746.0  2245.0  3803.0 
+# 
+# 
+# run: 5
+#    Name: E   Direction: Forward
+#    Number of peak pairs found       : 107
+#    Peak pair detection FDR          : 8.2	(7 %)
+#    Number of peptide identifications: 14
+#    Peptide identification FDR       : 3.3	(23.8 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1140.0  1645.0  1774.0  2336.0  3803.0 
+# 
+# 
+# run: 6
+#    Name: F   Direction: Forward
+#    Number of peak pairs found       : 109
+#    Peak pair detection FDR          : 6.8	(5.6 %)
+#    Number of peptide identifications: 15
+#    Peptide identification FDR       : 2.7	(17.8 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1141.0  1541.0  1750.0  2146.0  3803.0 
+# 
+# 
+# run: 7
+#    Name: G   Direction: Reverse
+#    Number of peak pairs found       : 105
+#    Peak pair detection FDR          : 9.6	(8.1 %)
+#    Number of peptide identifications: 14
+#    Peptide identification FDR       : 1.7	(11.9 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1139.0  1541.0  1736.0  2112.0  3803.0 
+# 
+# 
+# run: 8
+#    Name: H   Direction: Reverse
+#    Number of peak pairs found       : 107
+#    Peak pair detection FDR          : 7.2	(6.2 %)
+#    Number of peptide identifications: 14
+#    Peptide identification FDR       : 0.7	(4.8 %)
+#    Distribution of deconvoluted MW: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   295.2  1140.0  1541.0  1744.0  2129.0  3803.0
 ```
+
+![plot of chunk lpm_summary_of_pepmatched_object_with_mass_matches](.figure/lpm_summary_of_pepmatched_object_with_mass_matches-1.png) 
 A total of 14 different neuropeptides have been mass matched to peak pairs, 12 of which in all runs. The estimated false discovery rate is around 20%. If identifications are considered a strong signal for genuine labelled peptides, it is interesting to remark that we observe the identified peptides to have a slightly higher quantity, both for light and heavy labelled peptides. Notice that the bias for the light labelled peptides to have a higher quantity is also clearly visible. Also we observe that most of the identified peptides appear to have very minor differences in retention time within the peak pair. 
 
 Identified peptides have charges between one and three with a preference for double charges, and one single label. Looking deeper in the data, we notice that the same peptides are found both in single, double and triple charged form:
@@ -602,8 +722,26 @@ Identified peptides have charges between one and three with a preference for dou
 # identified peak pairs. 
 
  knitr::kable(matched_id[[1]][matched_id[[1]]$isID==T,],digits=3)
-# Error in is.data.frame(x): object 'matched_id' not found
 ```
+
+
+
+|   |ID          |samplename_L |  ID_L| z_L|     mz_L| quant_L|  ret_L|      m_L|samplename_H |  ID_H| z_H|     mz_H|    quant_H|  ret_H|      m_H|       MW| labelcount| precision|isID |pepID              |pepseq            |  pepmass| delta_m| N_identifications|
+|:--|:-----------|:------------|-----:|---:|--------:|-------:|------:|--------:|:------------|-----:|---:|--------:|----------:|------:|--------:|--------:|----------:|---------:|:----|:------------------|:-----------------|--------:|-------:|-----------------:|
+|11 |36145_36143 |NA           | 36145|   2|  530.813|  230228| 21.625| 1059.611|NA           | 36143|   2|  535.342|  37796.000| 21.625| 1068.670|  932.503|          1|     0.003|TRUE |Scg-PK-4           |EGDFTPRLa         |  932.476|  -0.026|                 1|
+|67 |371_36110   |NA           |   371|   2|  596.355|   24764| 33.801| 1190.696|NA           | 36110|   2|  600.882|   2417.318| 33.832| 1199.750| 1063.585|          1|     0.000|TRUE |Scg-TK-3           |APQAGFYGVRa       | 1063.561|  -0.024|                 1|
+|5  |36070_36071 |NA           | 36070|   1| 1257.760|  143180| 30.738| 1256.753|NA           | 36071|   1| 1266.817|  74764.000| 30.738| 1265.810| 1129.643|          1|     0.002|TRUE |Scg-IRP-co-peptide |pQSDLFLLSPK       | 1129.605|  -0.039|                 1|
+|57 |36206_40    |NA           | 36206|   2|  629.387|  245016| 30.738| 1256.759|NA           |    40|   2|  633.915| 140908.000| 30.738| 1265.815| 1129.649|          1|     0.001|TRUE |Scg-IRP-co-peptide |pQSDLFLLSPK       | 1129.605|  -0.045|                 1|
+|14 |36176_36178 |NA           | 36176|   2|  656.387|  442860| 22.376| 1310.759|NA           | 36178|   2|  660.922|  78320.000| 22.376| 1319.830| 1183.657|          1|     0.016|TRUE |Scg-PK-1           |GAAPAAQFSPRLa     | 1183.651|  -0.006|                 1|
+|83 |36219_1303  |NA           | 36219|   3|  457.610|   33452| 27.009| 1369.809|NA           |  1303|   3|  460.625|  13688.000| 27.009| 1378.854| 1242.693|          1|    -0.011|TRUE |Scg-FLRFa          |PDVDHVFLRFa       | 1242.656|  -0.038|                 1|
+|8  |36250_36260 |NA           | 36250|   1| 1444.721|   19312| 32.298| 1443.714|NA           | 36260|   1| 1453.772|  12260.000| 32.298| 1452.765| 1316.601|          1|    -0.004|TRUE |Scg-AKH-JP-1       |DAADFGDPYSFL      | 1316.561|  -0.041|                 1|
+|64 |36262_36265 |NA           | 36262|   2|  722.871|   51824| 32.298| 1443.727|NA           | 36265|   2|  727.403|  32872.000| 32.298| 1452.791| 1316.621|          1|     0.009|TRUE |Scg-AKH-JP-1       |DAADFGDPYSFL      | 1316.561|  -0.060|                 1|
+|7  |36254_36261 |NA           | 36254|   1| 1451.736|    4932| 31.846| 1450.729|NA           | 36261|   1| 1460.783|   3312.000| 31.846| 1459.775| 1323.614|          1|    -0.009|TRUE |Scg-AKH-JP-2       |YADPNADPMAFL      | 1323.585|  -0.029|                 1|
+|60 |36249_36246 |NA           | 36249|   2|  726.387|   17004| 31.846| 1450.759|NA           | 36246|   2|  730.910|   9960.000| 31.846| 1459.805| 1323.644|          1|    -0.009|TRUE |Scg-AKH-JP-2       |YADPNADPMAFL      | 1323.585|  -0.059|                 1|
+|48 |231_1970    |NA           |   231|   2|  858.963|   31460| 28.856| 1715.911|NA           |  1970|   2|  863.468|   4368.000| 28.907| 1724.921| 1588.778|          1|    -0.045|TRUE |Scg-OK-1           |NFDEIDRSGFSGFV    | 1588.721|  -0.058|                 1|
+|49 |36015_127   |NA           | 36015|   2|  886.991|  187480| 28.856| 1771.968|NA           |   127|   2|  891.520|  38964.000| 28.856| 1781.026| 1644.859|          1|     0.003|TRUE |Scg-PK-5           |DSSEDWAQPFVPRLa   | 1644.794|  -0.065|                 1|
+|91 |271_36140   |NA           |   271|   3|  591.664|   39260| 28.856| 1771.971|NA           | 36140|   3|  594.688|   8092.000| 28.856| 1781.043| 1644.869|          1|     0.017|TRUE |Scg-PK-5           |DSSEDWAQPFVPRLa   | 1644.794|  -0.074|                 1|
+|68 |36133_641   |NA           | 36133|   2|  942.602|   53936| 33.801| 1883.189|NA           |   641|   2|  947.137|   4348.000| 33.832| 1892.259| 1756.086|          1|     0.016|TRUE |Scg-PKL-2          |DPPADGLVWLPLVPRLa | 1756.008|  -0.078|                 1|
 
 
 
@@ -631,7 +769,6 @@ view_spectra(schistocerca_tmab,matched,run=1)
 ```r
 ## The "pepmatched" object with identifications
 view_spectra(schistocerca_tmab,matched_id,run=1)
-# Error in view_spectra(schistocerca_tmab, matched_id, run = 1): object 'matched_id' not found
 ```
 
 ![plot of chunk view_spectra](.figure/view_spectra-3.png) 
@@ -650,7 +787,6 @@ statlist<-make.statlist  (
 				logtransform=T,
 				quantmin=2**8 # Minimum quantity for most abundant peak of a peak pair. Cuts them off on 8 in log2 scale. 
 				)
-# Error in make.statlist(pepmatched_object = matched_id, cutoff = 1, logtransform = T, : object 'matched_id' not found
 ```
 
 #### Looking at the `statlist` object<a id="6.2"></a>
@@ -660,8 +796,66 @@ The statlist object contains four matrices with a column for every run and a row
 
 ```r
 lpm_summary(statlist, graphics = T)
-# Error in lpm_summary(statlist, graphics = T): object 'statlist' not found
+# 
+#        Object of class "lpm_statlist" with 8 runs and 81 features
+#        -----------------------------------------------------------------
+# 
+# Summary of light labelled peptides per run:
+#             A     B     C     D     E     F     G     H
+# Min.    11.74 12.42 12.69 12.47 11.63 11.84 11.40 11.53
+# 1st Qu. 14.06 13.90 15.02 14.85 15.02 14.73 13.10 14.66
+# Median  15.08 15.29 16.05 16.34 15.70 15.78 14.97 15.76
+# Mean    15.23 15.25 16.13 16.22 15.86 15.74 14.91 15.73
+# 3rd Qu. 16.48 16.39 17.13 17.24 17.01 16.73 16.03 16.97
+# Max.    18.76 18.38 19.90 20.69 19.54 19.59 19.46 19.43
+# 
+# Summary of heavy labelled peptides per run:
+#             A     B     C     D     E     F     G     H
+# Min.    11.20 11.39 11.46 11.07 11.03 11.58 11.07 11.22
+# 1st Qu. 13.05 12.95 13.48 13.58 13.27 12.73 12.67 12.96
+# Median  13.69 13.78 14.19 14.50 14.06 13.57 14.06 13.98
+# Mean    13.96 13.92 14.49 14.79 14.34 13.81 14.16 14.26
+# 3rd Qu. 14.99 14.82 15.50 15.79 15.44 14.77 15.45 15.34
+# Max.    17.84 18.46 18.62 18.67 19.57 18.72 19.30 19.04
+# 
+# Summary of sol condition per run:
+#             A     B     C     D     E     F     G     H
+# Min.    11.74 12.42 11.46 11.07 11.63 11.84 11.07 11.22
+# 1st Qu. 14.06 13.90 13.48 13.58 15.02 14.73 12.67 12.96
+# Median  15.08 15.29 14.19 14.50 15.70 15.78 14.06 13.98
+# Mean    15.23 15.25 14.49 14.79 15.86 15.74 14.16 14.26
+# 3rd Qu. 16.48 16.39 15.50 15.79 17.01 16.73 15.45 15.34
+# Max.    18.76 18.38 18.62 18.67 19.54 19.59 19.30 19.04
+# 
+# Summary of greg condition per run:
+#             A     B     C     D     E     F     G     H
+# Min.    11.20 11.39 12.69 12.47 11.03 11.58 11.40 11.53
+# 1st Qu. 13.05 12.95 15.02 14.85 13.27 12.73 13.10 14.66
+# Median  13.69 13.78 16.05 16.34 14.06 13.57 14.97 15.76
+# Mean    13.96 13.92 16.13 16.22 14.34 13.81 14.91 15.73
+# 3rd Qu. 14.99 14.82 17.13 17.24 15.44 14.77 16.03 16.97
+# Max.    17.84 18.46 19.90 20.69 19.57 18.72 19.46 19.43
+# 
+# Summary of ligth - heavy labelled peptides per run:
+#            A     B    C    D     E    F    G    H
+# Min.    0.54  1.03 1.23 1.40  0.60 0.26 0.33 0.31
+# 1st Qu. 1.01  0.95 1.54 1.27  1.75 2.00 0.43 1.70
+# Median  1.39  1.51 1.86 1.84  1.64 2.21 0.91 1.78
+# Mean    1.27  1.33 1.64 1.43  1.52 1.93 0.75 1.47
+# 3rd Qu. 1.49  1.57 1.63 1.45  1.57 1.96 0.58 1.63
+# Max.    0.92 -0.08 1.28 2.02 -0.03 0.87 0.16 0.39
+# 
+# Summary of sol - greg condition per run:
+#            A     B     C     D     E    F     G     H
+# Min.    0.54  1.03 -1.23 -1.40  0.60 0.26 -0.33 -0.31
+# 1st Qu. 1.01  0.95 -1.54 -1.27  1.75 2.00 -0.43 -1.70
+# Median  1.39  1.51 -1.86 -1.84  1.64 2.21 -0.91 -1.78
+# Mean    1.27  1.33 -1.64 -1.43  1.52 1.93 -0.75 -1.47
+# 3rd Qu. 1.49  1.57 -1.63 -1.45  1.57 1.96 -0.58 -1.63
+# Max.    0.92 -0.08 -1.28 -2.02 -0.03 0.87 -0.16 -0.39
 ```
+
+![plot of chunk inspect_lpm_statlist_object](.figure/inspect_lpm_statlist_object-1.png) 
 
 Here again, we observe a clear difference in quantity between light and heavy labelled peptides, but no overall trends between the conditions. This is a typical picture that is seen in many high throughput technologies: most features show no difference, and there might be a "channel"" effect (e.g. in micro array studies, a dye effect). As long as the experimental design is balanced (i.e. with the labelling directions equally distributed over conditions), this should be no problem. Either, the label effect can be normalized, or label effect can be added as a covariate in a linear model. 
 
@@ -671,8 +865,9 @@ The statlist object can also be visualized with MA-plots. These are plots of the
 
 ```r
 lpm_MAplot(statlist, loess_span = 1)
-# Error in lpm_MAplot(statlist, loess_span = 1): object 'statlist' not found
 ```
+
+![plot of chunk MA_plot](.figure/MA_plot-1.png) 
 When we compare all runs, we consistently observe the same overall label bias, but the structure of the bias along A-axis seems more or less random. This suggests that the label effect is not dependent on quantity. 
 
 
