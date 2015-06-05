@@ -15,13 +15,12 @@
 #' @param quantmin       Numeric. Minimal untransformed quantity for a feature to be retained. Caution: this is an OR function, so if one of both peaks in a peakpair is above quantmin, the peakpair is retained.                            
 #' @param FDR	          Logical. Generates mock data according to a restricted randomization procedure that produces mock data with a very comparable structure to the original data. Structure elements that are retained are the dispersion of features in the retention time - m/z space and the structure of decimals for m/z. This is important because decimals are non random in m/z data. For more information see \code{\link{lpm_mockdata}}.
 #' @param iterations     Integer: the number of iterations to estimate the FDR. Careful: for large datasets this can take a long time! A modest number (3 to 5) of iterations will already give a good indication of FDR. 
-#' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doSNOW (windows) or doMC (linux) will be loaded.
+#' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading. Optimally, the number of cores is a multiple of the number of runs. Since every run makes up a single thread, it makes no sense to use more cores than the number of runs. 
 #' @param verbose        Logical. Gives verbose output.
 #' @details This is the central function of the labelpepmatch package. Candidate matching features are those features that have the same charge, that co-elute within a given time interval and that have a mass difference of an integer multiple (the number of labels) of the mass difference between two labels. However, only m/z values are given, and masses have to be calculated first (deconvolution). Note that in the case one or more labels are present, the deconvoluted mass will not be correct because an unknown number of charges originate from labels rather than from protons. However, this error is systematic and would by definition be the same for two features within a peak pair. In other words, the mass difference within a peak pair is still calculated correctly. The function follows a simple algorithm where features are first sorted based on their preliminarily deconvoluted masses and retention time. Every feature is then matched to a set of equally charged features that fall within the same retention time window. Once a peak pair is detected, the number of labels is inferred from the mass difference and the correct mass of the peptide is recalculated.
 #' @import bitops
 #' @import brew
 #' @import foreach
-#' @import snow
 #' @export
 #' @exportClass pepmatched
 #' @return An object of class \code{pepmatched} without mass matchings. This object can serve as an imput to the \code{pep.id} function, or in case of no mass matching, can go directly in \code{make.statlist}. 
@@ -241,12 +240,14 @@ if(cores==1)                                                ###
     }                                                       ###
 }else # parallel !                                          ###            
 {                                                           ###
-    load.multithread(cores)                                 ###
+    cl<- makeCluster(cores)                                 ###                 
+    registerDoParallel(cl)                                  ###
     matchlistlist<-foreach (k = 1:runcount) %dopar%         ###     
     {                                                       ###    
         matchlist<-MATCHER(lpm_input,labeldiff,k)           ###
         return(matchlist)                                   ###             
     }                                                       ###
+    stopCluster(cl)                                         ###
 }                                                           ###
                                                             ###              
 ###############################################################
@@ -292,12 +293,14 @@ for (iteration in 1:iterations)
           }                                                       ###
       }else # parallel !                                          ###            
       {                                                           ###
-          load.multithread(cores)                                 ###
+        cl<- makeCluster(cores)                                   ###                 
+        registerDoParallel(cl)                                    ###
           FDRlist<-foreach (k = 1:runcount) %dopar%         		  ###     
           {                                                       ###    
               matchlist<-MATCHER(mockDB,labeldiff,k,FDR=T)        ###
               return(matchlist)                                   ###             
           }                                                       ###
+        stopCluster(cl)                                           ###
       }                                                           ###
                                                                   ###              
 #####################################################################

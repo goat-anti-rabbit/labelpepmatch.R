@@ -34,7 +34,7 @@ pepmatch(lpm_input, elutionthresh = 0.2, elutionunit = "minutes",
 
 \item{iterations}{Integer: the number of iterations to estimate the FDR. Careful: for large datasets this can take a long time! A modest number (3 to 5) of iterations will already give a good indication of FDR.}
 
-\item{cores}{Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doSNOW (windows) or doMC (linux) will be loaded.}
+\item{cores}{Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading. Optimally, the number of cores is a multiple of the number of runs. Since every run makes up a single thread, it makes no sense to use more cores than the number of runs.}
 
 \item{verbose}{Logical. Gives verbose output.}
 }

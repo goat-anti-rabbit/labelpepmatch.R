@@ -15,7 +15,7 @@
 #' @param iterations     How many iterations of FDR should be ran? This might take some time for larger datasets. 
 #' @param checkdb        Look if the masses and sequences in your database make sense. UNDER CONSTRUCTION!!!
 #' @param graphics       Only applies when FDR is TRUE.   
-#' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doSNOW (windows) or doMC (linux) will be loaded.
+#' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading. 
 #' @param verbose        Logical. If TRUE, verbose output is generated during identifications. 
 #' @export
 #' @exportClass pepmatched
@@ -92,12 +92,14 @@ if(cores==1)
     }                                                       
 }else # parallel !                                                      
 {                                                           
-    load.multithread(cores)
-    IDlistlist  <-foreach (run = 1:runcount, .export=ls(envir=globalenv())) %dopar%                    
+  cl<- makeCluster(cores)                                                    
+  registerDoParallel(cl)                                    
+  IDlistlist  <-foreach (run = 1:runcount, .export=ls(envir=globalenv())) %dopar%                    
     { 
 		matchlist   <-pepmatched[[run]]                                                      
 		matchlist   <-pep.massmatch(input=matchlist,db=db,ID_thresh=ID_thresh,masscorrection=masscorrection,FDR=FDR,iterations=iterations,checkdb=checkdb,graphics=F,verbose=verbose)# here I removed run=run, which seemed to be an old argument of the pep.massmatch function. See comments there.                                                  
-    }                                                       
+    }
+  stopCluster(cl)
 }                                                                      
 #######################################################################################################################################  
 #closeAllConnections()

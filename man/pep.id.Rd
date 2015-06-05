@@ -26,7 +26,7 @@ pep.id(pepmatched, ID_thresh = 0.2, db, presetdb = NA, dbpath = NA,
 
 \item{masscorrection}{Logical. Should masses be corrected on the basis of identifications? Caution should be payed here, since this will only work with a sufficiently high number of real matches. This rather sketchy feature should be considered something interesting to have a look at, rather than a compulsory part of the pipeline. Always also run without mass correction and compare! Default is FALSE.}
 
-\item{cores}{Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doSNOW (windows) or doMC (linux) will be loaded.}
+\item{cores}{Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading.}
 
 \item{FDR}{Logical. Test false discovery rate of peptide mass match identification by calculating a decoy database and look how many hits you get there. Uses \code{\link{generate_random_db}}.}
 

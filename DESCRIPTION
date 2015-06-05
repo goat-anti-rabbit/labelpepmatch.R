@@ -8,21 +8,19 @@ Depends:
   R (>= 2.11.0),
   lme4
 Enhances:   
-  doMC,
-  doSNOW,
-  multcomp
+  doParallel,
+  multcomp,
+  limma
 Imports:
   bitops,
   brew,
   foreach,
   influence.ME,
-  limma,
   lsmeans,
   plotrix,
   plyr,
   RCurl,
   reshape2,
-  snow,
   colorRamps,
   gplots
 Suggests: 

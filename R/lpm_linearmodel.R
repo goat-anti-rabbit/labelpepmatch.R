@@ -58,7 +58,7 @@ function	(
 	
 	### The easiest "vanilla" linear model function
 
-	vanilla<-function(IDx,matrix1,matrix2,matrix3,matrix4)
+	vanilla<-function(IDx,matrix1,matrix2,matrix3,matrix4,design,label)
 	{
 	dataone	<- matrix3[IDx,]
 	datatwo	<- matrix4[IDx,]
@@ -203,7 +203,7 @@ function	(
 # Now we either loop it over the runs, or do i in parallel
 if(method=="vanilla"){
 ###################################################################     
-if(verbose==T){cat("executing linear model	") }			    ###
+if(verbose==T){cat("executing linear model	") }		            ###
 if(cores==1)                                                    ###        
 {                                                               ###
                                                                 ###
@@ -214,12 +214,14 @@ if(cores==1)                                                    ###
     }                                                           ###
 }else # parallel !                                              ###            
 {                                                               ###
-    load.multithread(cores)                                     ###
+  cl<- makeCluster(cores)                                       ###                 
+  registerDoParallel(cl)                                        ###
     LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %dopar%        			   		###     
     {                                                           ###    
-        lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4)   	###
-        return(lmlist)                                       	###             
+        lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4,design,label)   	  ###
+        return(lmlist)                                       	  ###             
     }                                                           ###
+      stopCluster(cl)                                           ###
 }                                                               ###
                                                                 ###              
 ###################################################################
@@ -238,12 +240,16 @@ if(cores==1)                                                    ###
     }                                                           ###
 }else # parallel !                                              ###            
 {                                                               ###
-    load.multithread(cores)                                     ###
+    cl<- makeCluster(cores)                                       ###                 
+    registerDoParallel(cl)                                        ###
     LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %dopar%        			   		###     
+
+      
     {                                                           ###    
         lmlist<-complex(k,posthoc,postsum,posthoc2,postsum2)   	###
         return(lmlist)                                       	###             
     }                                                           ###
+    stopCluster(cl)                                           ###
 }                                                               ###
                                                                 ###              
 ###################################################################
