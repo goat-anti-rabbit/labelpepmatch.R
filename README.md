@@ -1,13 +1,5 @@
----
-title: "labelpepmatch"
-author: "Rik Verdonck et al."
-date: '2015-06-05' 
-output: rmarkdown::html_vignette 
-vignette: |
-  %\VignetteIndexEntry{Vignette Title} 
-  %\VignetteEngine{knitr::knitr} 
-  %\VignetteIndexEntry{labelpepmatch}
----
+# LABELPEPMATCH
+
 
 <br/>
 <br/>
@@ -125,7 +117,7 @@ For our locust dataset, the designvector looks like  `c("sol","greg","F","R","F"
 This means that in the first sample, the "sol" condition is labelled with a light label, in the second, the "greg" condition is labelled with a light label, and so on. We would like to emphasize the importance of good experimental design with a balanced label swap. This is critical, since there is no way to tell apart label and condition effects if they are collinear. 
 
 #### Reading in an example dataset<a id="2.3"></a>
-For now, we will simply use one of the two example datasets^[Neuropeptides extracted from the corpora cardiaca of fifth instar nymphs of the desert locust *Schistocerca gregaria* under two rearing conditions: solitarious and gregarious, analyzed with ESI-Q-TOF. For details and another dataset on *C. elegans*, see Verdonck et al.] that are available within the package. If you want to read in your own data, use one of the read functions mentioned above. 
+For now, we will simply use one of the two example datasets that are available within the package. If you want to read in your own data, use one of the read functions mentioned above. 
 
 
 ```r
@@ -166,7 +158,7 @@ colnames(schistocerca_tmab$frame)
 
 
 #### Inspecting the `lpm_input` object<a id="2.4"></a>
-Labelpepmatch also has an inbuild summary function^[The `lpm_summary` function is your best friend throughout the pipeline. It can be applied to any labelpepmatch specific class and will always give you an informative and oversightful overview of the object.] that summarizes the data in a somewhat more informative way. Notice that here, you get specific information about the structure of the data, the mass/charge ratios and the charges, the retention times etc. There is also a graphical output that will help you quickly visualize the data in the m/z and retention time dimensions. The parameter "run" determines which run is used for the graphical representation of the data. This can serve as a quick quality check per run before actually getting started with peak pair matching. If run is set to 0, a boxplot overview of all runs is given. 
+Labelpepmatch also has an inbuild summary function. This function is your best friend throughout the pipeline. It can be applied to any labelpepmatch specific class and will always give you an informative and oversightful overview of the object. Notice that here, you get specific information about the structure of the data, the mass/charge ratios and the charges, the retention times etc. There is also a graphical output that will help you quickly visualize the data in the m/z and retention time dimensions. The parameter "run" determines which run is used for the graphical representation of the data. This can serve as a quick quality check per run before actually getting started with peak pair matching. If run is set to 0, a boxplot overview of all runs is given. 
 
 
 ```r
@@ -255,7 +247,7 @@ lpm_summary(schistocerca_tmab, run=0, graphics=T)
 
 ![plot of chunk lpm_summary_of_lpm_input_object](.figure/lpm_summary_of_lpm_input_object-1.png) 
 
-Notice that the output is rather extensive and consists of basic information on experiment design, origin of the data and some summary statistics of the data. The figures give a more graphical overview of the specific run.^[If one wants to compare multiple runs graphically without graphic output in the terminal, the `lpm_summary` function can be run with `printoutput=F`] 
+Notice that the output is rather extensive and consists of basic information on experiment design, origin of the data and some summary statistics of the data. The figures give a more graphical overview of the specific run. If one wants to compare multiple runs graphically without graphic output in the terminal, the `lpm_summary` function can be run with `printoutput=F`.
 
 
 ```r
@@ -270,7 +262,7 @@ Some observations that can be made here:
 
 - <a id="quantdistr"></a>The quantity is an almost symmetric distribution on a log2 scale and there is no clear correllation between mass/charge ratio and quantity. Especially in run B there is a large proportion of features with very low quantity. One can remedy this by only using features that are above a certain quantity threshold. 
 
-- The charges seem to be Poisson-like distributed starting at 2 charges. Single charged analytes are uncommon.^[In the preprocessing of the data, most single charged features were discarded because the ESI-Q-TOF spectrum originally contained a lot of single charged contaminations. Only single charged features that were very clearly peptides were retained]
+- The charges seem to be Poisson-like distributed starting at 2 charges. Single charged analytes are uncommon. In the preprocessing of the data, most single charged features were discarded because the ESI-Q-TOF spectrum originally contained a lot of single charged contaminations. Only single charged features that were very clearly peptides were retained.
 
 
 
@@ -341,7 +333,7 @@ A quick look at the first run within our `pepmatched` object.
 
 - "_L" in a column name means a property of the light labelled feature within the peak pair, "_H" is a property of the heavy labelled feature. 
 
-- Note that the deconvolution mz*z is not the same as the MW, because of the presence of labels. 
+- Note that the deconvolution mz x z is not the same as the MW, because of the presence of labels. 
 
 - The precision column is the deviation between theoretical and observed mass difference within the peak pair. It is bounded by the `labelthresh` parameter of the `pepmatch` function. 
 
