@@ -184,7 +184,7 @@ X<-x$frame
  		
  																							#To here!
  		### What if no hits?				
-    if nrow(matchlist==0)
+    if(nrow(matchlist)==0)
     {
       matchlist=cbind.data.frame(	
         "ID"=NA,
