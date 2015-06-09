@@ -26,8 +26,8 @@
 #' @exportClass pepmatched
 #' @return An object of class \code{pepmatched} without mass matchings. This object can serve as an imput to the \code{pep.id} function, or in case of no mass matching, can go directly in \code{make.statlist}. 
 
-#### TO DO: blijkbaar herkent hij de %do% call niet in default mode met cores=1
 #### TO DO: samplename_L en samplename_H zijn volledig nutteloze kolommen. Die moeten er nog uit. 
+#### TO DO: check wat er gebeurt als FDR nullen oplevert
 
 
 pepmatch <-
