@@ -183,7 +183,37 @@ X<-x$frame
  		}
  		
  																							#To here!
- 																							
+ 		### What if no hits?				
+    if nrow(matchlist==0)
+    {
+      matchlist=cbind.data.frame(	
+        "ID"=NA,
+        "samplename_L"=NA,
+        "ID_L"=NA,
+        "z_L"=NA,
+        "mz_L"=NA,
+        "quant_L"=NA,
+        "ret_L"=NA,
+        "m_L"=NA,
+        "samplename_H"=NA,
+        "ID_H"=NA,
+        "z_H"=NA,
+        "mz_H"=NA,
+        "quant_H"=NA,
+        "ret_H"=NA,
+        "m_H"=NA,	
+        "MW"=NA,
+        "labelcount"=NA,
+        "precision"=NA,
+        "isID"=NA,
+        "pepID"=NA,
+        "pepseq"=NA,
+        "pepmass"=NA,
+        "delta_m"=NA,
+        "N_identifications"=NA
+      )
+      matchlist=matchlist[-1,]
+    }else{
 																				
 								### Add two very useful and informative columns
 		precision	<- (abs(matchlist$mz1-matchlist$mz2)*matchlist$z1)/matchlist$labelcount-labeldiff
@@ -210,6 +240,7 @@ X<-x$frame
 	### Kick out features with a too low molecular weight
 	matchlist<-matchlist[order(matchlist$MW),]
 	matchlist<-matchlist[matchlist$MW>minmolweight,]
+    }
 		
 if(verbose ==TRUE){cat(paste("run",k,"is ready",sep=" "));cat("\n")}
 return("matchlist"=matchlist)		
