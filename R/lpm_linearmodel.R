@@ -216,14 +216,14 @@ if(cores==1)                                                    ###
     }                                                           ###
 }else # parallel !                                              ###            
 {                                                               ###
-  cl<- makeCluster(cores)                                       ###                 
+  cl<- parallel::makeCluster(cores)                                       ###                 
   registerDoParallel(cl)                                        ###
     LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %dopar%        			   		###     
     {                                                           ###    
         lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4,design,label)   	  ###
         return(lmlist)                                       	  ###             
     }                                                           ###
-      stopCluster(cl)                                           ###
+      parallel::stopCluster(cl)                                           ###
 }                                                               ###
                                                                 ###              
 ###################################################################
@@ -242,7 +242,7 @@ if(cores==1)                                                    ###
     }                                                           ###
 }else # parallel !                                              ###            
 {                                                               ###
-    cl<- makeCluster(cores)                                       ###                 
+    cl<- parallel::makeCluster(cores)                                       ###                 
     registerDoParallel(cl)                                        ###
     LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %dopar%        			   		###     
 
@@ -251,7 +251,7 @@ if(cores==1)                                                    ###
         lmlist<-complex(k,posthoc,postsum,posthoc2,postsum2)   	###
         return(lmlist)                                       	###             
     }                                                           ###
-    stopCluster(cl)                                           ###
+    parallel::stopCluster(cl)                                           ###
 }                                                               ###
                                                                 ###              
 ###################################################################

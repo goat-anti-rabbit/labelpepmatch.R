@@ -272,14 +272,14 @@ if(cores==1)                                                ###
     }                                                       ###
 }else # parallel !                                          ###            
 {                                                           ###
-    cl<- doParallel::makeCluster(cores)                     ###                 
+    cl<- parallel::makeCluster(cores)                       ###                 
     doParallel::registerDoParallel(cl)                      ###
     matchlistlist<-foreach (k = 1:runcount) %dopar%         ###     
     {                                                       ###    
         matchlist<-MATCHER(lpm_input,labeldiff,k)           ###
         return(matchlist)                                   ###             
     }                                                       ###
-    doParallel::stopCluster(cl)                             ###
+    parallel::stopCluster(cl)                               ###
 }                                                           ###
                                                             ###              
 ###############################################################
@@ -325,14 +325,14 @@ for (iteration in 1:iterations)
           }                                                       ###
       }else # parallel !                                          ###            
       {                                                           ###
-        cl<- doParallel::makeCluster(cores)                       ###                 
+        cl<- parallel::makeCluster(cores)                         ###                 
         doParallel::registerDoParallel(cl)                        ###
           FDRlist<-foreach (k = 1:runcount) %dopar%         		  ###     
           {                                                       ###    
               matchlist<-MATCHER(mockDB,labeldiff,k,FDR=T)        ###
               return(matchlist)                                   ###             
           }                                                       ###
-        doParallel::stopCluster(cl)                               ###
+        parallel::stopCluster(cl)                                 ###
       }                                                           ###
                                                                   ###              
 #####################################################################
