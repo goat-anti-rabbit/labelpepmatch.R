@@ -185,7 +185,13 @@ plotgrid<-function(tab,cex=1.5)
 			if("pepmatch_FDR_summary" %in% names(input))
 			{
 			tab1<-table(round(input[[run]]$precision,2))
-			tab2<-table(round(input$pepmatch_FDR_details$precision[names(input$pepmatch_FDR_details$precision)==as.character(run)],2))
+			tab2<-table(
+                round(
+                    input$pepmatch_FDR_details$precision[
+                                                        names(input$pepmatch_FDR_details$precision)==as.character(run)
+                                                        ]
+                    ,2)
+                )/input$pepmatch_FDR_details$iterations
 			tab<-merge(as.data.frame(tab1),as.data.frame(tab2),by="Var1",all=T)
 			tab<-tab[order(tab$Var1),]
 			pyramid.plot(	tab[,2],
