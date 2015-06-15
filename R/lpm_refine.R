@@ -17,6 +17,7 @@
 #' @param only.identified    Logical. Only features that have been identified with mass match are retained.   
 #' @export
 
+# TO DO: at this moment, the lpm_refine function does not refine the FDR. This is difficult because for now the "pepmatched" object does not contain the information to do this (or not ready made). For now, we'll just throw a warning that the FDR will not get refined. However, in the future I want the FDR to also get refined. Perhaps we could get rid of all the mockdata (blows up the pepmatched object) and just get a decent summary of all mock peak pairs. 
 
 lpm_refine <-
 function(
@@ -38,11 +39,13 @@ function(
 {	
 	X<-pepmatched_object
 	runcount<-nrow(X$design)
+  if(is.null(X[["pepmatch_FDR_summary"]])==F)
+  {
+    warning("This refine function call does not refine the FDR estimates. They might hence be an overestimation")
+  }
 	for (i in 1:runcount)
 	{
 		x<-X[[i]]
-		
-		
 		if(missing(labelthresh)==F){x<-x[x$precision<=labelthresh,];X$pepmatch_parameters$labelthresh<-labelthresh}
 		if(missing(elutionthresh)==F){x<-x[abs(x$ret_L-x$ret_H)<=elutionthresh,];X$pepmatch_parameters$elutionthresh<-elutionthresh}
 		

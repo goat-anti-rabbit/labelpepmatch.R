@@ -178,23 +178,22 @@ plotgrid<-function(tab,cex=1.5)
 			
 			layout(layout.matrix)
 			
-			#par(mfrow=c(2,2))
-
 			### If FDR is true: A pyramid plot for the precision for peak pair detection 
 			### Else just a histogram of the precision 
 			if("pepmatch_FDR_summary" %in% names(input))
 			{
-			tab1<-table(round(input[[run]]$precision,2))
-			tab2<-table(
+        if(input$pepmatch_parameters$labelthresh<0.01){roundfactor<-3}else{roundfactor<-2} 
+			  tab1<-table(round(input[[run]]$precision,roundfactor))
+			  tab2<-table(
                 round(
                     input$pepmatch_FDR_details$precision[
                                                         names(input$pepmatch_FDR_details$precision)==as.character(run)
                                                         ]
-                    ,2)
+                    ,roundfactor)
                 )/input$pepmatch_FDR_details$iterations
-			tab<-merge(as.data.frame(tab1),as.data.frame(tab2),by="Var1",all=T)
-			tab<-tab[order(tab$Var1),]
-			pyramid.plot(	tab[,2],
+  			tab<-merge(as.data.frame(tab1),as.data.frame(tab2),by="Var1",all=T)
+  			tab<-tab[order(tab$Var1),]
+  			pyramid.plot(	tab[,2],
 							tab[,3],
 							lxcol="lightgreen",
 							rxcol= "tomato",
@@ -423,8 +422,8 @@ plotgrid<-function(tab,cex=1.5)
 			### A pyramid plot for the precision of labelmatch in function of identified or not 
 			isID<-replace(isID,isID==F,"unidentified")
 			isID<-replace(isID,isID==T,"identified")
-			
-			tab<-table(isID,round(input[[run]]$precision,2))
+			if(input$pepmatch_parameters$labelthresh<0.01){roundfactor<-3}else{roundfactor<-2} 
+			tab<-table(isID,round(input[[run]]$precision,roundfactor))
 			tab[1,]<-(tab[1,]/sum(tab[1,]))*100
 			tab[2,]<-(tab[2,]/sum(tab[2,]))*100
 			pyramid.plot(tab[1,],tab[2,],lxcol="lightgreen",rxcol= "tomato",gap=10,main="Mass difference precision",unit="",top.labels=c("identified","","unidentified"),labels= colnames(tab),labelcex=0.7)
@@ -444,9 +443,9 @@ plotgrid<-function(tab,cex=1.5)
 			### And if FDR is true, a pyramid plot for the precisions of peptide identification!
 			if(FDR==T)
 			{
-			tab1<-table(round(input[[run]]$delta_m,2))
+			tab1<-table(round(input[[run]]$delta_m,roundfactor))
 			tab1<-100* tab1/sum(tab1)
-			tab2<-table(round(input$pep.id_FDR_details$FDR_precisionvectors[[run]],2))
+			tab2<-table(round(input$pep.id_FDR_details$FDR_precisionvectors[[run]],roundfactor))
 			tab2= 100* tab2/sum(tab2)
 			tab<-merge(as.data.frame(tab1),as.data.frame(tab2),by="Var1",all=T)
 			tab<-tab[order(as.numeric(as.character(tab$Var1))),]
@@ -565,6 +564,4 @@ plotgrid<-function(tab,cex=1.5)
 
 		}
 	}
-
-
 }

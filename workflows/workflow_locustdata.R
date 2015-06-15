@@ -31,8 +31,8 @@ statlist<-make.statlist  (pepmatched_object=matched_id,cutoff=1,logtransform=T,q
 model <- lpm_linearmodel(statlist, method = "vanilla", p.adjust.method = "BH", cores = 8)
 
     
-    
-    
-    
+    lpm_volcanoplot(model, plotlocator = F)
+    lpm_heatmap(model, FCcutoff = 1.25, main = "HM on residuals")
+    lpm_heatmap(model, FCcutoff = 1.25, contrasts = T, main = "HM on res. contrasts")
     
                     

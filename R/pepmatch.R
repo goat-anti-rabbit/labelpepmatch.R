@@ -28,6 +28,7 @@
 
 #### TO DO: samplename_L en samplename_H zijn volledig nutteloze kolommen. Die moeten er nog uit. 
 #### TO DO: check wat er gebeurt als FDR nullen oplevert
+#### TO DO: at this moment, the lpm_refine function does not refine the FDR. This is difficult because for now the "pepmatched" object does not contain the information to do this (or not ready made). For now, we'll just throw a warning that the FDR will not get refined. However, in the future I want the FDR to also get refined. Perhaps we could get rid of all the mockdata (blows up the pepmatched object) and just get a decent summary of all mock peak pairs. 
 
 
 pepmatch <-

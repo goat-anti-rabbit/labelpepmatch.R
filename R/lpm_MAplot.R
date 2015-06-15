@@ -1,6 +1,6 @@
 #' Plot an MA plot.
 #' 
-#' Make MA plot of \code{lpm_statlist} object. Here, for every peak pair, the average (A) log2 quantity value of a feature is plotted in function of the difference (M) of log2 quantity. This is the ideal way of visualizing possible label bias over the entire continuum of quantities. Bias always needs some further investigation, but should, given a sufficient number of replicates, never be a big reason to worry. The bias can either be dealt with by accounting for label effect in a linear model (see \code{\link{lpm_linearmodel}}) or by normalizing the data within and between runs (see \code{\link[limma]{limma}}). The function also draws a loess fit. 
+#' Make MA plot of \code{lpm_statlist} object. An MA plot is a Bland-Altman plot where for every peak pair, the average (A) log2 quantity value of a feature is plotted in function of the difference (M) of log2 quantity. This is the ideal way of visualizing possible label bias over the entire continuum of quantities. Bias always needs some further investigation, but should, given a sufficient number of replicates, never be a big reason to worry. The bias can either be dealt with by accounting for label effect in a linear model (see \code{\link{lpm_linearmodel}}) or by normalizing the data within and between runs (see \code{\link[limma]{limma}}). The function also draws a loess fit. 
 #' 
 #' @author Rik Verdonck
 #' @param x            An object of class \code{lpm_statlist}
