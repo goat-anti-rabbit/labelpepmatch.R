@@ -196,7 +196,7 @@ matched<-pepmatch(
   minmolweight=132,
   quantmin=2000,
   FDR=T,
-  iterations=10,
+  iterations=3,
   cores=1
 )
 ```
@@ -211,7 +211,7 @@ The pepmatch function also contains a false discovery rate estimation. This shou
 
 - the structure of decimals for m/z. This is important because decimals are non random in m/z data. 
 
-Note that estimating a false discovery rate in highly structured data is difficult. We suspect that our FDR estimates are on the conservative side, but we will only gain full understanding of this once multiple real datasets with varying degrees of structure are being subjected to these analyses. The FDR estimation can be ran in multiple iterations in order to get better estimates of the false discovery rate. Note however that for larger datasets, multiple iterations may dramatically slow down your analyses. For more information on mock data generation, we refer to the `lpm_mockdata` function.
+Note that estimating a false discovery rate in highly structured data is difficult. We suspect that our FDR estimates are on the conservative side, but we will only gain full understanding of this once multiple real datasets with varying degrees of structure are being subjected to these analyses. The FDR estimation can be ran in multiple iterations in order to get better estimates of the false discovery rate. Note however that for larger datasets, multiple iterations may dramatically slow down your analyses and blow up the size of objects that will be carried along the pipeline. For more information on mock data generation, we refer to the `lpm_mockdata` function.
 
 #### The `pepmatched` object<a id="3.3"></a>
 The `pepmatch` function outputs an object of class `pepmatched`. This object contains a list of data frames with peak pairs for each separate run, the parameters used for the peak pair detection, information about FDR (if FDR=T) and some other metadata. A quick look into the structure of the object:
@@ -250,10 +250,10 @@ lpm_summary(matched, run=1, graphics=T)
 Note that the observed mass precision for peak pair detection is a symmetric distribution with the maximum around 0 and bilaterally bounded by `labelthresh`. Systematic error, if any, turns out to be minor. Notice that also for the false discovery rate tested peak pairs, the distribution is not uniform. This is expected since mock features in the mock database look like real labelled peptides and hence their masses are non random.
 <br/>
 
-The next panel shows a table of the number of charges versus the number of labels, bounded by `labelcountmax`. No peak pairs with more than 5 charges were found. Most peak pairs have two or three charges and one or two labels. Note that a minor proportion of detected peak pairs have more labels than charges (indicated in red), which for TMAB is physically impossible. No doubt these are false positives. We will remove them in a next step. 
+The next panel shows a table of the number of charges versus the number of labels, bounded by `labelcountmax`. No peak pairs with more than 4 charges were found. Most peak pairs have two or three charges and one or two labels. Note that a minor proportion of detected peak pairs have more labels than charges (indicated in red), which for TMAB is physically impossible. No doubt these are false positives. We will remove them in a next step. 
 <br/>
 
-Next, there is an MA plot where you see that there is a tendency for the ligth labelled channel to have a higher signal. See [lpm_MAplot](#MAplot) for more information. 
+Next, there is an MA plot where you see that there is a tendency for the light labelled channel to have a higher signal. See [lpm_MAplot](#MAplot) for more information. 
 
 The last panel shows a plot of the retention time precision (bounded by `elutionthresh`) versus the mass difference precision (bounded by `labelthresh`). Correct interpretation of this figure can lead to better estimation on parameter stringency. For example: here we see that most peak pairs seem to have co-eluted perfectly simultaneously, while the deviation from the expected mass difference is distributed more evenly over the x-axis. However, in the peak pairs with a larger retention time difference, there is a trend towards having a larger deviation from the theoretical mass difference. So perhaps we have chosen our `elutionthresh` on the high side.
 If after inspection of the matched object, one would want to adjust some of the thresholds of the `pepmatch` function, the function does not have to be repeated. Instead, the much quicker function `lpm_refine` can be used. 

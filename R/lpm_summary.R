@@ -248,11 +248,11 @@ plotgrid<-function(tab,cex=1.5)
 
 					
 			### An MA-plot!
-			light<-input[[run]]$quant_L
-			heavy<-input[[run]]$quant_H
-			M<-log2(light)-log2(heavy)
-			ylim<-c(-1.2*max(abs(M)),1.2*max(abs(M)))
-			A<-(log2(light)+log2(heavy))/2
+			light<<-input[[run]]$quant_L + 1
+			heavy<<-input[[run]]$quant_H + 1
+			M<<-log2(light)-log2(heavy)
+			ylim<<-c(-1.2*max(abs(M)),1.2*max(abs(M)))
+			A<<-(log2(light)+log2(heavy))/2
 			smoothScatter(A,M,main="MA plot",ylab="more H <--     M     --> more L",xlab="A   mean log2(quantity)",ylim=ylim,col="darkgreen",colramp = colorRampPalette(c("lightyellow", "green")))
 			points(A,M,pch=20,col=rgb(0,.7,.4,alpha=0.8))
 			abline(0,0,col="darkgreen",lt=1,lwd=3)	

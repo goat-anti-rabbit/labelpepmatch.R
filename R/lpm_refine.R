@@ -39,33 +39,81 @@ function(
 {	
 	X<-pepmatched_object
 	runcount<-nrow(X$design)
-  if(is.null(X[["pepmatch_FDR_summary"]])==F)
+  # first throw a warning if one of the selection parameters is larger than the actual parameters used.
+	if(missing(elutionthresh)==F && X$pepmatch_parameters$elutionthresh < elutionthresh)
+	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
+	if(missing(labelthresh)==F && X$pepmatch_parameters$labelthresh < labelthresh)
+	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
+	if(missing(quantmin)==F && X$pepmatch_parameters$quantmin > quantmin)
+	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
+	if(missing(labelcountmax)==F && X$pepmatch_parameters$labelcountmax < labelcountmax)
+	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
+
+	# Now we change the thresholds in the pepmatched$pepmatch_parameters 
+	if(missing(labelthresh)==F)  {  X$pepmatch_parameters$labelthresh<-labelthresh}
+	if(missing(elutionthresh)==F){	X$pepmatch_parameters$elutionthresh<-elutionthresh}
+	if(missing(quantmin)==F)     {	X$pepmatch_parameters$quantmin<-quantmin}
+	if(missing(quantmax)==F)     {	X$pepmatch_parameters$quantmax<-quantmax}
+	if(missing(MWmin)==F)        {	X$pepmatch_parameters$MWmin<-MWmin}
+	if(missing(MWmax)==F)        {	X$pepmatch_parameters$MWmax<-MWmax}
+	if(missing(labelcountmin)==F){  X$pepmatch_parameters$labelcountmin<-labelcountmin }
+	if(missing(labelcountmax)==F){	X$pepmatch_parameters$labelcountmax<-labelcountmax } 
+  if(missing(zmin)==F)         {	X$pepmatch_parameters$zmin<-zmin }
+	if(missing(zmax)==F)         {	X$pepmatch_parameters$zmax<-zmax }
+	                                                                                                                   
+                         
+     
+                            
+  # This is a bit hacky, because it doesn't allow for thresholds to be zero. 
+  # Which is only problematic if you are for example working with discrete elution times and you want your differences to be exactly zero. 
+  # but hey...
+	if(missing(labelthresh)){labelthresh=0}
+	if(missing(elutionthresh)){elutionthresh=0}
+	if(missing(MWmin)){MWmin=0}
+	if(missing(MWmax)){MWmax=0}
+	if(missing(quantmin)){quantmin=0}
+	if(missing(quantmax)){quantmax=0}
+	if(missing(labelcountmin)){labelcountmin=0}
+	if(missing(labelcountmax)){labelcountmax=0}
+	if(missing(zmin)){zmin=0}
+	if(missing(zmax)){zmax=0}
+
+  
+  
+  # Define the function that throws out elements of a single matchlist based on parameters
+  refiner<-function(matchlist,labelthresh,elutionthresh,MWmin,MWmax,quantmin,quantmax,labelcountmin,labelcountmax,zmin,zmax,only.identified=F,remove.more.labels.than.charges=F)
   {
-    warning("This refine function call does not refine the FDR estimates. They might hence be an overestimation")
+    x<-matchlist
+    if(labelthresh>0){x<-x[x$precision<=labelthresh,]}
+    if(elutionthresh>0){x<-x[abs(x$ret_L-x$ret_H)<=elutionthresh,]}
+    
+    if(MWmin>0){x<-x[x$MW<=MWmin,]}
+    if(MWmax>0){x<-x[x$MW>=MWmax,]}
+    
+    if(quantmin>0){x<-x[x$quant_L>=quantmin | x$quant_H>=quantmin,]}
+    if(quantmax>0){x<-x[x$quant_L<=quantmax | x$quant_H<=quantmax,]}
+    
+    if(labelcountmin>0){x<-x[x$labelcount>=labelcountmin,]}
+    if(labelcountmax>0){x<-x[x$labelcount<=labelcountmax,]}
+    
+    if(zmin>0){x<-x[x$z_H>=zmin,]}
+    if(zmax>0){x<-x[x$z_H<=zmax,]}
+    
+    if(only.identified==T){x<-x[x$N_identifications>0,]}
+    if(remove.more.labels.than.charges==T){x<-x[x$labelcount<=x$z_H,]}
+    
+    return(x)
   }
-	for (i in 1:runcount)
+
+  
+  
+### Apply it to the matchlists  
+	for (run in 1:runcount)
 	{
-		x<-X[[i]]
-		if(missing(labelthresh)==F){x<-x[x$precision<=labelthresh,];X$pepmatch_parameters$labelthresh<-labelthresh}
-		if(missing(elutionthresh)==F){x<-x[abs(x$ret_L-x$ret_H)<=elutionthresh,];X$pepmatch_parameters$elutionthresh<-elutionthresh}
-		
-		if(missing(MWmin)==F){x<-x[x$MW<=MWmin,]}
-		if(missing(MWmax)==F){x<-x[x$MW>=MWmax,]}
-
-		if(missing(quantmin)==F){x<-x[x$quant_L>=quantmin | x$quant_H>=quantmin,];X$pepmatch_parameters$quantmin<-quantmin}
-		if(missing(quantmax)==F){x<-x[x$quant_L<=quantmax | x$quant_H<=quantmax,];X$pepmatch_parameters$quantmax<-quantmax}
-
-		if(missing(labelcountmin)==F){x<-x[x$labelcount>=labelcountmin,]}
-		if(missing(labelcountmax)==F){x<-x[x$labelcount<=labelcountmax,]}
-		
-		if(missing(zmin)==F){x<-x[x$z_H>=zmin,]}
-		if(missing(zmax)==F){x<-x[x$z_H<=zmax,]}
-		
-		if(only.identified==T){x<-x[x$isID,]}
-		if(remove.more.labels.than.charges==T){x<-x[x$labelcount<=x$z_H,]}
-		
-		X[[i]]<-x
+	  X[[run]]<-refiner(X[[run]],labelthresh,elutionthresh,MWmin,MWmax,quantmin,quantmax,labelcountmin,labelcountmax,zmin,zmax,only.identified,remove.more.labels.than.charges)
 	}
+
+  
 	if(is.null(remove.run)==F)
 	{
 		X											<-X[-remove.run]
@@ -89,6 +137,42 @@ function(
 			X$identified_peptides<-as.data.frame(table(idpep))
 		}
 
+	}
+  
+
+### And if FDR == T, also aply it to the FDR_matchlist
+
+  
+	if(is.null(X[["pepmatch_FDR_summary"]])==F)
+	{
+	  #warning("This refine function call does not refine the FDR estimates. They might hence be an overestimation")
+	  #counts<<-table(X$pepmatch_FDR_matchlist[,1:2])
+    
+	  X$pepmatch_FDR_matchlist<-refiner(X$pepmatch_FDR_matchlist,labelthresh,elutionthresh,MWmin,MWmax,quantmin=0,quantmax=0,labelcountmin,labelcountmax,zmin,zmax,only.identified,remove.more.labels.than.charges)  
+    
+    
+    
+    
+    
+	  counts<-table(factor(X$pepmatch_FDR_matchlist[,1],levels=1:runcount),factor(X$pepmatch_FDR_matchlist[,2],levels=1:X$pepmatch_FDR_details$iterations))
+
+	  for (run in 1:runcount)
+	  {
+      X$pepmatch_FDR_summary[run,1] <-nrow(X[[run]])
+      X$pepmatch_FDR_summary[run,2] <-round(mean(counts[run,]),2)
+      X$pepmatch_FDR_summary[run,3] <-round(median(counts[run,]),2)
+      X$pepmatch_FDR_summary[run,4] <-round(min(counts[run,]),2)
+      X$pepmatch_FDR_summary[run,5] <-round(max(counts[run,]),2)
+      X$pepmatch_FDR_summary[run,6] <-round(sd(counts[run,]),2)
+      X$pepmatch_FDR_summary[run,7] <-round(sd(counts[run,])/sqrt(ncol(counts))*100,2)
+      X$pepmatch_FDR_summary[run,8] <-round(mean(counts[run,])/nrow(X[[run]])*100,2)
+      X$pepmatch_FDR_summary[run,9] <-round(median(counts[run,])/nrow(X[[run]])*100,2)
+      X$pepmatch_FDR_summary[run,10]<-round(min(counts[run,])/nrow(X[[run]])*100,2)
+      X$pepmatch_FDR_summary[run,11]<-round(max(counts[run,])/nrow(X[[run]])*100,2)
+      X$pepmatch_FDR_summary[run,12]<-round(sd(counts[run,])/nrow(X[[run]])*100,2)
+      X$pepmatch_FDR_summary[run,13]<-round(sd(counts[run,])/sqrt(ncol(counts))/nrow(X[[run]])*100,2)
+	  }
+      
 	}
 	
 	class(X)<-"pepmatched"

@@ -57,8 +57,8 @@ design		  <-lpm_input$design
 runcount    <-nrow(design)
 
 
-### HERE THE FUNCTION THAT ACTUALLY MATCHES PEAK PAIRS IS DEFINED, no parameters other than the lpm_input object and the runnumber are given because it runs within this environment anyway. 
-MATCHER <- function	(x,labeldiff,k,FDR=F)
+### HERE THE FUNCTION THAT ACTUALLY MATCHES PEAK PAIRS IS DEFINED, no parameters other than the lpm_input object and the runnumber are given because it only runs from within this environment anyway. 
+MATCHER <- function	(x,labeldiff,k)
 {
 X<-x$frame
 
@@ -76,12 +76,13 @@ X<-x$frame
 	### We do this before peak pair detection, so we don't waste time on features we will not be analyzing anyway. 
 	###
 	### If you want to retain all features for first analysis, set the threshold values to 0. 
-	### You will however encounter a lot of nonsense. 		
-	if(FDR==F)
-	{  
-	run<-run[order(run$quant),]
-	run<-run[run$quant>quantmin, ]
-  }
+	### You will however encounter a lot of nonsense. 
+	
+	if(FDR==F)		
+	{
+		run<-run[order(run$quant),]
+		run<-run[run$quant>=quantmin, ]
+	}
 							###	Order matrix for performance
  	run		<- run	[
 					order	(
@@ -262,7 +263,7 @@ return("matchlist"=matchlist)
 
 # Now we either loop it over the runs, or do i in parallel
 ###############################################################     
-if(verbose==T){cat("Matching peptide peaks\n") }			      ###
+if(verbose==T){cat("Matching peptide peaks\n") }			###
 if(cores==1)                                                ###        
 {                                                           ###
                                                             ###
@@ -297,40 +298,43 @@ names(matchlistlist)<-matchlistnames
 if(FDR==T)
 {
 mockdatalist<-list()
+FDRlistlist<-list()
+
 FDR_summary_frame<-data.frame(matrix(nrow=iterations,ncol=runcount))
 FDR_summary_frame_prop<-data.frame(matrix(nrow=iterations,ncol=runcount))
 FDR_precisionvectorvector<-NULL
-
-
 
 for (iteration in 1:iterations)
 {
       FDR_precisionvector<-NULL
       ### Now we use the lpm_mockdata function to generate mock data with properties very similar to the real data.
-      mockDB<-lpm_mockdata(lpm_input,masslevel=100,retlevel=5,elutionunit=elutionunit,graphics=F)
+      mockdata<-lpm_mockdata(lpm_input,masslevel=100,retlevel=5,elutionunit=elutionunit,graphics=F)
       mockdataname<-paste("mockdata",iteration,sep="_")
-      assign(mockdataname,mockDB)
+      assign(mockdataname,mockdata)
       mockdatalist[[iteration]]<-get(mockdataname)
       
-      # Now we either loop it over the runs, or do i in parallel
+      #matchlist<<-MATCHER(mockdata,labeldiff,1)
+      
+      # Now we either loop it over the runs, or do it in parallel
+      # According to documentation, I can rest assured that the order in which 
+      # the elements of the final FDRlist appear, is the actual order of the runs. 
 #####################################################################  
                                                                   ###
-      if(verbose==T){cat("Testing FDR\n") }						            ###
+      if(verbose==T){cat("Testing FDR\n") }						  ###
       if(cores==1)                                                ###        
       {                                                           ###
-                                                                  ###
-          FDRlist<-foreach (k = 1:runcount) %do%            		  ###     
+          FDRlist<-foreach (k = 1:runcount) %do%                  ###     
           {                                                       ###    
-              matchlist<-MATCHER(mockDB,labeldiff,k,FDR=T)        ###
+              matchlist<-MATCHER(mockdata,labeldiff,k)            ###
               return(matchlist)                                   ###                         
           }                                                       ###
       }else # parallel !                                          ###            
       {                                                           ###
         cl<- parallel::makeCluster(cores)                         ###                 
         doParallel::registerDoParallel(cl)                        ###
-          FDRlist<-foreach (k = 1:runcount) %dopar%         		  ###     
+          FDRlist<-foreach (k = 1:runcount) %dopar%               ###     
           {                                                       ###    
-              matchlist<-MATCHER(mockDB,labeldiff,k,FDR=T)        ###
+              matchlist<-MATCHER(mockdata,labeldiff,k)            ###
               return(matchlist)                                   ###             
           }                                                       ###
         parallel::stopCluster(cl)                                 ###
@@ -341,6 +345,10 @@ for (iteration in 1:iterations)
       FDRlistnames<-NULL
       for(k in 1:runcount){FDRlistnames<-c(FDRlistnames,paste("FDRlist",k,sep="_"))}
       names(FDRlist)<-FDRlistnames
+      #FDRlist$ID<-iteration
+      #colnames(FDRlist)[1]<-"iteration"
+      
+      FDRlistlist[[iteration]]<-FDRlist
       
       FDR_summary<-NULL
       FDR_summary_prop<-NULL
@@ -363,8 +371,37 @@ for (iteration in 1:iterations)
       #print(FDR_summary)
       #print(FDR_summary_frame)
       FDR_precisionvectorvector<-c(FDR_precisionvectorvector,FDR_precisionvector)
-}
+}# end of iterations
 
+
+
+
+### Now collapse that FDRlistlist thing in pieces. 
+reshape_fdrlist<-function(FDRlistlist,iterations,runcount){
+  fdr_frame<-as.data.frame(FDRlistlist[[1]][[1]][0,])
+  fdr_frame<-cbind(fdr_frame,NULL)
+  colnames(fdr_frame)[c(1,2)]<-c("run","iteration") 
+  
+  for (k in 1:runcount)
+  {
+    for(i in 1:iterations)
+    {
+      rowstoadd<-FDRlistlist[[i]][[k]]
+      if(nrow(rowstoadd)>0){
+        rowstoadd<-cbind(rep(k,nrow(rowstoadd)),rowstoadd)
+        colnames(rowstoadd)[c(1,2)]<-c("run","iteration")
+        rowstoadd$run<-k
+        rowstoadd$iteration<-i
+        fdr_frame<-rbind(fdr_frame,rowstoadd)
+      }
+    }
+  }
+  return(fdr_frame)
+}
+FDR_frame<<-reshape_fdrlist(FDRlistlist,iterations,runcount)
+
+
+#FDR_summary_frame<<-FDR_summary_frame
 FDR_summary<-rbind(
 				round(apply(as.matrix(FDR_summary_frame),2,mean),2), 					# mean
 				round(apply(as.matrix(FDR_summary_frame),2,median),2),					# median
@@ -389,7 +426,7 @@ rownames(FDR_summary)<-c("mean","median","min","max","sd","sem")
 rownames(FDR_summary_prop)<-c("meanprop","medianprop","minprop","maxprop","sdprop","semprop")
 FDR_summary<-cbind.data.frame("N_real_hits"=realhits,t(FDR_summary),t(FDR_summary_prop))
 
-}else{FDR_summary="No FDR executed";FDR_precisionvector="No FDR executed";mockDB="No FDR executed"}
+}else{FDR_summary="No FDR executed";FDR_precisionvector="No FDR executed";mockdata="No FDR executed"}
 
 
 metadata<-list  (
@@ -407,6 +444,8 @@ metadata<-list  (
                 )
 if(FDR==T)
 {
+metadata[[length(metadata)+1]]<-FDR_frame
+names(metadata)[[length(metadata)]]<-"pepmatch_FDR_matchlist"
 metadata[[length(metadata)+1]]<-FDR_summary
 names(metadata)[[length(metadata)]]<-"pepmatch_FDR_summary"
 FDRdata<-list	(
@@ -417,7 +456,6 @@ FDRdata<-list	(
 metadata[[length(metadata)+1]]<-FDRdata
 names(metadata)[[length(metadata)]]<-"pepmatch_FDR_details"				
 }
-
 
 out<-append(matchlistlist,metadata)
 class(out)<-"pepmatched"

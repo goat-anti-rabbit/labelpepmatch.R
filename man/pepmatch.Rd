@@ -39,7 +39,7 @@ pepmatch(lpm_input, elutionthresh = 0.2, elutionunit = "minutes",
 \item{verbose}{Logical. Gives verbose output.}
 }
 \value{
-An object of class \code{pepmatched} without mass matchings. This object can serve as an imput to the \code{pep.id} function, or in case of no mass matching, can go directly in \code{make.statlist}.
+An object of class \code{pepmatched} without mass matchings. This object can serve as an imput to the \code{pep.id} function, or in case of no mass matching, can go directly in \code{make.statlist}. If FDR is TRUE, it also contains a summary of the false discovery rate: the mean, median, minimal and maximal number of false positive hits per run over all iterations, along with their proportion to the presumed real positives. Finally, if FDR is TRUE, the pepmatched object contains all the mass match precisions of the false positive hits along with the actual mockdata used for FDR estimation. Don't for
 }
 \description{
 Identifies pairs of labelled peptides in an \code{lpm_input} object.

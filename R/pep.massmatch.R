@@ -50,7 +50,7 @@ if(ncol(as.data.frame(input))==1)
 
     input<-as.data.frame(input)
     colnames(input)<-"MW"
-    input<-cbind.data.frame("MW"=input,"N_identifications"=NA,"pepID"=NA,"pepseq"=NA,"pepmass"=NA,"delta_m"=NA)
+    input<-cbind.data.frame("MW"=input,"N_identifications"=NA,"pepID"="unknown","pepseq"=NA,"pepmass"=NA,"delta_m"=NA)
 }
 if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n")}
 
