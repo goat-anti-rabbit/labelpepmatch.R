@@ -13,7 +13,7 @@ schistocerca_tmab <- locustdata
 # Set seed for FDR estimation reproducibility
 set.seed(1)
 matched <- pepmatch(lpm_input = schistocerca_tmab, elutionthresh = 0.1, labelthresh = 0.03, 
-    labelcountmax = 5, label = "TMAB", minmolweight = 132, quantmin = 2000, 
+    labelcountmax = 5, label = "TMAB", minmolweight = 132, quantmin = 0, 
     FDR = T, iterations = 4, cores = 8)
 
 matched<-lpm_refine(matched,remove.more.labels.than.charges=T)         

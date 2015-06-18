@@ -12,7 +12,7 @@
 #' @param labelheavymass Numeric. Mass of heavy label. Default is 137.1728, the mass of heavy TMAB
 #' @param label          Character. Optional argument. If it is "TMAB", automatically the right values for light and heavy TMAB are used. Can be extended in the future with newer labels.  
 #' @param minmolweight   Numeric. Minimal molecular weight for a peptide to be retained. Default is 132, the smallest possible peptide.                  
-#' @param quantmin       Numeric. Minimal untransformed quantity for a feature to be retained. Caution: this is an OR function, so if one of both peaks in a peakpair is above quantmin, the peakpair is retained.                            
+#' @param quantmin       Numeric. Minimal untransformed quantity for a feature to be retained. Caution: this is an AND function, so only if both peaks in a peakpair are below quantmin, the peakpair is discarted. In this way we are sure we do not overlook extreme up- or downregulations.                             
 #' @param FDR	          Logical. Generates mock data according to a restricted randomization procedure that produces mock data with a very comparable structure to the original data. Structure elements that are retained are the dispersion of features in the retention time - m/z space and the structure of decimals for m/z. This is important because decimals are non random in m/z data. For more information see \code{\link{lpm_mockdata}}.
 #' @param iterations     Integer: the number of iterations to estimate the FDR. Careful: for large datasets this can take a long time! A modest number (3 to 5) of iterations will already give a good indication of FDR. 
 #' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading. Optimally, the number of cores is a multiple of the number of runs. Since every run makes up a single thread, it makes no sense to use more cores than the number of runs. 
@@ -58,7 +58,7 @@ runcount    <-nrow(design)
 
 
 ### HERE THE FUNCTION THAT ACTUALLY MATCHES PEAK PAIRS IS DEFINED, no parameters other than the lpm_input object and the runnumber are given because it only runs from within this environment anyway. 
-MATCHER <- function	(x,labeldiff,k)
+MATCHER <- function	(x,labeldiff,k,FDR)
 {
 X<-x$frame
 
@@ -72,17 +72,7 @@ X<-x$frame
 
 	colnames(run) <- c("id","z","mz","quant","ret")
 
-	### Features with too low quantities are kicked out here. 
-	### We do this before peak pair detection, so we don't waste time on features we will not be analyzing anyway. 
-	###
-	### If you want to retain all features for first analysis, set the threshold values to 0. 
-	### You will however encounter a lot of nonsense. 
-	
-	if(FDR==F)		
-	{
-		run<-run[order(run$quant),]
-		run<-run[run$quant>=quantmin, ]
-	}
+
 							###	Order matrix for performance
  	run		<- run	[
 					order	(
@@ -239,9 +229,14 @@ X<-x$frame
 
 
 
-	### Kick out features with a too low molecular weight
+	### Kick out features with a too low molecular weight or too low minimal quantity
 	matchlist<-matchlist[order(matchlist$MW),]
 	matchlist<-matchlist[matchlist$MW>minmolweight,]
+	
+	if(FDR==F)
+	{
+		matchlist<-matchlist[matchlist$quant_L>=quantmin | matchlist$quant_H>=quantmin,]
+	}
     }
 		
 if(verbose ==TRUE){cat(paste("run",k,"is ready",sep=" "));cat("\n")}
@@ -269,7 +264,7 @@ if(cores==1)                                                ###
                                                             ###
     matchlistlist<-foreach (k = 1:runcount) %do%            ###     
     {                                                       ###    
-        matchlist<-MATCHER(lpm_input,labeldiff,k)           ###
+        matchlist<-MATCHER(lpm_input,labeldiff,k,FDR=F)           ###
         return(matchlist)                                   ###                         
     }                                                       ###
 }else # parallel !                                          ###            
@@ -278,7 +273,7 @@ if(cores==1)                                                ###
     doParallel::registerDoParallel(cl)                      ###
     matchlistlist<-foreach (k = 1:runcount) %dopar%         ###     
     {                                                       ###    
-        matchlist<-MATCHER(lpm_input,labeldiff,k)           ###
+        matchlist<-MATCHER(lpm_input,labeldiff,k,FDR=F)           ###
         return(matchlist)                                   ###             
     }                                                       ###
     parallel::stopCluster(cl)                               ###
@@ -325,7 +320,7 @@ for (iteration in 1:iterations)
       {                                                           ###
           FDRlist<-foreach (k = 1:runcount) %do%                  ###     
           {                                                       ###    
-              matchlist<-MATCHER(mockdata,labeldiff,k)            ###
+              matchlist<-MATCHER(mockdata,labeldiff,k,FDR=T)      ###
               return(matchlist)                                   ###                         
           }                                                       ###
       }else # parallel !                                          ###            
@@ -334,7 +329,7 @@ for (iteration in 1:iterations)
         doParallel::registerDoParallel(cl)                        ###
           FDRlist<-foreach (k = 1:runcount) %dopar%               ###     
           {                                                       ###    
-              matchlist<-MATCHER(mockdata,labeldiff,k)            ###
+              matchlist<-MATCHER(mockdata,labeldiff,k,FDR=T)      ###
               return(matchlist)                                   ###             
           }                                                       ###
         parallel::stopCluster(cl)                                 ###

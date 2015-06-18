@@ -127,8 +127,8 @@ function (
 	### And now transform the data!
 	if(logtransform==T)
 	{
-		masterstatlist$quant_H<-log2(masterstatlist$quant_H)
-		masterstatlist$quant_L<-log2(masterstatlist$quant_L)
+		masterstatlist$quant_H<-log2(masterstatlist$quant_H+1)
+		masterstatlist$quant_L<-log2(masterstatlist$quant_L+1)
 	}
 
 

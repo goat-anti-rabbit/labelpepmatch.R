@@ -194,7 +194,7 @@ matched<-pepmatch(
   labelcountmax=5,
   label="TMAB",   
   minmolweight=132,
-  quantmin=2000,
+  quantmin=0,
   FDR=T,
   iterations=3,
   cores=1
@@ -261,7 +261,7 @@ If after inspection of the matched object, one would want to adjust some of the 
 #### Cleaning your data<a id="3.4"></a>
 
 ```{r lpm_refine_1,eval=T}
-matched<-lpm_refine(matched,elutionthresh=0.15)
+matched<-lpm_refine(matched,elutionthresh=0.15,quantmin = 2**8)
 ```
 And have a look at the output again (this time without printing in the terminal).
 ```{r lpm_summary_of_refined_pepmatched_object, eval=T, fig.width = 9, fig.height = 6}

@@ -380,8 +380,8 @@ plotgrid<-function(tab,cex=1.5)
 			isID<-input[[run]]$isID
 			
 			### and a quantity boxplot
-			data<-rbind.data.frame(cbind.data.frame("quant"=log2(input[[run]]$quant_L),"isID"=isID,"label"=rep("L",length(isID))), 
-						cbind.data.frame("quant"=log2(input[[run]]$quant_H),"isID"=isID,"label"=rep("H",length(isID))))	
+			data<-rbind.data.frame(cbind.data.frame("quant"=log2(input[[run]]$quant_L+1),"isID"=isID,"label"=rep("L",length(isID))), 
+						cbind.data.frame("quant"=log2(input[[run]]$quant_H+1),"isID"=isID,"label"=rep("H",length(isID))))	
 			data[,2]<-as.character(data[,2])
 			data[data[,2]=="TRUE",2] <-"identif"
 			data[data[,2]=="FALSE",2]<-"unknown"
