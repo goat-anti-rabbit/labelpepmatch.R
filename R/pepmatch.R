@@ -12,7 +12,7 @@
 #' @param labelheavymass Numeric. Mass of heavy label. Default is 137.1728, the mass of heavy TMAB
 #' @param label          Character. Optional argument. If it is "TMAB", automatically the right values for light and heavy TMAB are used. Can be extended in the future with newer labels.  
 #' @param minmolweight   Numeric. Minimal molecular weight for a peptide to be retained. Default is 132, the smallest possible peptide.                  
-#' @param quantmin       Numeric. Minimal untransformed quantity for a feature to be retained. Caution: this is an AND function, so only if both peaks in a peakpair are below quantmin, the peakpair is discarted. In this way we are sure we do not overlook extreme up- or downregulations.                             
+#' @param quantmin       Numeric vector of one or two elements. Minimal untransformed quantity for a feature to be retained. The highest value of the vector is the cutoff for the most abundant peak in a pair, the lowest for the least abundant. If you want to make sure you pick up extreme up-or downregulations, the vector should contain one zero or very small number. If you want to discart a peak pair once one of the peaks is below a quantity threshold, you can set the threshold with one minimal value (a vector with one element). This is equivalent to a vector with two equal elements.                           
 #' @param FDR	          Logical. Generates mock data according to a restricted randomization procedure that produces mock data with a very comparable structure to the original data. Structure elements that are retained are the dispersion of features in the retention time - m/z space and the structure of decimals for m/z. This is important because decimals are non random in m/z data. For more information see \code{\link{lpm_mockdata}}.
 #' @param iterations     Integer: the number of iterations to estimate the FDR. Careful: for large datasets this can take a long time! A modest number (3 to 5) of iterations will already give a good indication of FDR. 
 #' @param cores          Interger. Number of cores that can be used on the computer for calculation. When >1, the packages foreach and doParallel will be used for multithreading. Optimally, the number of cores is a multiple of the number of runs. Since every run makes up a single thread, it makes no sense to use more cores than the number of runs. 
@@ -55,6 +55,9 @@ if(label=="TMAB"){labellightmass=128.1177;labelheavymass=137.17280}
 labeldiff   <-labelheavymass-labellightmass
 design		  <-lpm_input$design
 runcount    <-nrow(design)
+	quantminlowest <-min(quantmin)
+	quantminhighest<-max(quantmin)
+
 
 
 ### HERE THE FUNCTION THAT ACTUALLY MATCHES PEAK PAIRS IS DEFINED, no parameters other than the lpm_input object and the runnumber are given because it only runs from within this environment anyway. 
@@ -71,6 +74,18 @@ X<-x$frame
 							                    #	Give column names
 
 	colnames(run) <- c("id","z","mz","quant","ret")
+
+	### Features with too low quantities are kicked out here. 
+	### We do this before peak pair detection, so we don't waste time on features we will not be analyzing anyway. 
+	###
+	### If you want to retain all features for first analysis, set the threshold values to 0. 
+	### You will however encounter a lot of nonsense. 
+	
+	if(FDR==F)		
+	{
+		run<-run[order(run$quant),]
+		run<-run[run$quant>=quantminlowest, ]
+	}
 
 
 							###	Order matrix for performance
@@ -235,7 +250,7 @@ X<-x$frame
 	
 	if(FDR==F)
 	{
-		matchlist<-matchlist[matchlist$quant_L>=quantmin | matchlist$quant_H>=quantmin,]
+		matchlist<-matchlist[matchlist$quant_L>=quantminhighest | matchlist$quant_H>=quantminhighest,]
 	}
     }
 		
@@ -426,15 +441,16 @@ FDR_summary<-cbind.data.frame("N_real_hits"=realhits,t(FDR_summary),t(FDR_summar
 
 metadata<-list  (
 				"design"		=design,
-				"pepmatch_parameters"=data.frame( 
-					"elutionthresh" =as.numeric(elutionthresh),
-					"labelthresh"   =as.numeric(labelthresh),
-					"labelcountmax" =as.numeric(labelcountmax),
-					"labellightmass"=as.numeric(labellightmass),
-					"labelheavymass"=labelheavymass,
-					"label"         =label,
-					"minmolweight"  =as.numeric(minmolweight),
-					"quantmin"		=as.numeric(quantmin)
+				"pepmatch_parameters" =data.frame( 
+					"elutionthresh"   =as.numeric(elutionthresh),
+					"labelthresh"     =as.numeric(labelthresh),
+					"labelcountmax"   =as.numeric(labelcountmax),
+					"labellightmass"  =as.numeric(labellightmass),
+					"labelheavymass"  =labelheavymass,
+					"label"           =label,
+					"minmolweight"    =as.numeric(minmolweight),
+					"quantminlowest"  =as.numeric(quantminlowest),
+					"quantminhighest" =as.numeric(quantminhighest)
 					)
                 )
 if(FDR==T)

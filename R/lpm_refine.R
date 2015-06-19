@@ -6,7 +6,7 @@
 #' @param elutionthresh      Numeric. Threshold for elution time difference between two peaks to be considered a peakpair. 
 #' @param MWmin              Numeric. Minimal molecular weight of the peptide without labels. 
 #' @param MWmax              Numeric. Maximal molecular weight of the peptide without labels.
-#' @param quantmin           Numeric. Minimal quantity (intensity or abundance). This is an AND function, so both peaks in a peak pair have to be below this quantity in order to be discarted. 
+#' @param quantmin           Numeric vector of one or two elements. Minimal untransformed quantity for a feature to be retained. The highest value of the vector is the cutoff for the most abundant peak in a pair, the lowest for the least abundant. If you want to make sure you pick up extreme up-or downregulations, the vector should contain one zero or very small number. If you want to discart a peak pair once one of the peaks is below a quantity threshold, you can set the threshold with one minimal value (a vector with one element). This is equivalent to a vector with two equal elements.
 #' @param quantmax           Numeric. Maximal quantity (intensity or abundance). This is an AND function, so both peaks in a peak pair have to be above this quantity in order to be discarted. 
 #' @param labelcountmin      Integer. Minimal number of labels. 
 #' @param labelcountmax      Integer. Maximal number of labels. 
@@ -44,7 +44,9 @@ function(
 	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
 	if(missing(labelthresh)==F && X$pepmatch_parameters$labelthresh < labelthresh)
 	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
-	if(missing(quantmin)==F && X$pepmatch_parameters$quantmin > quantmin)
+	if(missing(quantmin)==F && X$pepmatch_parameters$quantminhighest > max(quantmin))
+	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
+	if(missing(quantmin)==F && X$pepmatch_parameters$quantminlowest > min(quantmin))  
 	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
 	if(missing(labelcountmax)==F && X$pepmatch_parameters$labelcountmax < labelcountmax)
 	{warning("Your selection parameters are less stringent than the ones used to generate this object. This will NOT work")}
@@ -52,7 +54,7 @@ function(
 	# Now we change the thresholds in the pepmatched$pepmatch_parameters 
 	if(missing(labelthresh)==F)  {  X$pepmatch_parameters$labelthresh<-labelthresh}
 	if(missing(elutionthresh)==F){	X$pepmatch_parameters$elutionthresh<-elutionthresh}
-	if(missing(quantmin)==F)     {	X$pepmatch_parameters$quantmin<-quantmin}
+	if(missing(quantmin)==F)     {	X$pepmatch_parameters$quantminlowest <- min(quantmin);X$pepmatch_parameters$quantminhighest<-max(quantmin)}
 	if(missing(quantmax)==F)     {	X$pepmatch_parameters$quantmax<-quantmax}
 	if(missing(MWmin)==F)        {	X$pepmatch_parameters$MWmin<-MWmin}
 	if(missing(MWmax)==F)        {	X$pepmatch_parameters$MWmax<-MWmax}
@@ -64,14 +66,14 @@ function(
                          
      
                             
-  # This is a bit hacky, because it doesn't allow for thresholds to be zero. 
+  # This is a bit hacky, because it doesn't allow for set thresholds to be zero. 
   # Which is only problematic if you are for example working with discrete elution times and you want your differences to be exactly zero. 
   # but hey...
 	if(missing(labelthresh)){labelthresh=0}
 	if(missing(elutionthresh)){elutionthresh=0}
 	if(missing(MWmin)){MWmin=0}
 	if(missing(MWmax)){MWmax=0}
-	if(missing(quantmin)){quantmin=0}
+	if(missing(quantmin)){quantminlowest=0;quantminhighest=0}else{quantminlowest<<-min(quantmin);quantminhighest<<-max(quantmin)}
 	if(missing(quantmax)){quantmax=0}
 	if(missing(labelcountmin)){labelcountmin=0}
 	if(missing(labelcountmax)){labelcountmax=0}
@@ -81,7 +83,7 @@ function(
   
   
   # Define the function that throws out elements of a single matchlist based on parameters
-  refiner<-function(matchlist,labelthresh,elutionthresh,MWmin,MWmax,quantmin,quantmax,labelcountmin,labelcountmax,zmin,zmax,only.identified=F,remove.more.labels.than.charges=F)
+  refiner<-function(matchlist,labelthresh,elutionthresh,MWmin,MWmax,quantminlowest,quantminhighest,quantmax,labelcountmin,labelcountmax,zmin,zmax,only.identified=F,remove.more.labels.than.charges=F)
   {
     x<-matchlist
     if(labelthresh>0){x<-x[x$precision<=labelthresh,]}
@@ -90,7 +92,14 @@ function(
     if(MWmin>0){x<-x[x$MW<=MWmin,]}
     if(MWmax>0){x<-x[x$MW>=MWmax,]}
     
-    if(quantmin>0){x<-x[x$quant_L>=quantmin | x$quant_H>=quantmin,]}
+    # exclude all features that have at least one feature that is below quantminlowest
+    # Or in other words (and in this code) retain all features that are both above quantminlowest
+    if(quantminlowest>0){x<-x[x$quant_L>=quantminlowest,] ; x<-x[x$quant_H>=quantminlowest,]}   
+    
+    # exlcude all features that are both below quantminhighest
+    # Or in other words (and in this code) retain the features that have at least one above quantminhighest
+    if(quantminhighest>0){x<-x[x$quant_L>=quantminhighest | x$quant_H>=quantminhighest,]}
+    
     if(quantmax>0){x<-x[x$quant_L<=quantmax | x$quant_H<=quantmax,]}
     
     if(labelcountmin>0){x<-x[x$labelcount>=labelcountmin,]}
@@ -110,7 +119,7 @@ function(
 ### Apply it to the matchlists  
 	for (run in 1:runcount)
 	{
-	  X[[run]]<-refiner(X[[run]],labelthresh,elutionthresh,MWmin,MWmax,quantmin,quantmax,labelcountmin,labelcountmax,zmin,zmax,only.identified,remove.more.labels.than.charges)
+	  X[[run]]<-refiner(X[[run]],labelthresh,elutionthresh,MWmin,MWmax,quantminlowest,quantminhighest,quantmax,labelcountmin,labelcountmax,zmin,zmax,only.identified,remove.more.labels.than.charges)
 	}
 
   
@@ -148,7 +157,7 @@ function(
 	  #warning("This refine function call does not refine the FDR estimates. They might hence be an overestimation")
 	  #counts<<-table(X$pepmatch_FDR_matchlist[,1:2])
     
-	  X$pepmatch_FDR_matchlist<-refiner(X$pepmatch_FDR_matchlist,labelthresh,elutionthresh,MWmin,MWmax,quantmin=0,quantmax=0,labelcountmin,labelcountmax,zmin,zmax,only.identified,remove.more.labels.than.charges)  
+	  X$pepmatch_FDR_matchlist<-refiner(X$pepmatch_FDR_matchlist,labelthresh,elutionthresh,MWmin,MWmax,quantminlowest=0,quantminhighest=0,quantmax=0,labelcountmin,labelcountmax,zmin,zmax,only.identified,remove.more.labels.than.charges)  
     
     
     

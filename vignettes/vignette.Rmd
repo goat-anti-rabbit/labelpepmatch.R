@@ -102,6 +102,10 @@ library(labelpepmatch)
 ```{r attach_labelpepmatch_2,eval=F,echo=TRUE}
 library(labelpepmatch)
 ```
+```{r set_seed,eval=T,echo=F}
+set.seed(7)
+```
+
 
 Labelpepmatch contains a number of functions that will take you from a list of peaks (mass/charge, retention time, quantity) to a list of deconvoluted peak pairs, with the possibility of identification, visualisation and statistical analysis. Since different mass spectrometers produce different output, and since numerous good software packages for peak picking and chromatogram alignment are already around, this package offers a pipeline that starts where peak picking software stops. 
 The input for this package is a list of peaks with their mass/charge ratio, their retention time and some quantitative measure (peak intensity or abundance). For easy data import, we provide two adaptors for common data formats (standard lpm and Progenesis LCMS). 
@@ -256,7 +260,7 @@ The next panel shows a table of the number of charges versus the number of label
 Next, there is an MA plot where you see that there is a tendency for the light labelled channel to have a higher signal. See [lpm_MAplot](#MAplot) for more information. 
 
 The last panel shows a plot of the retention time precision (bounded by `elutionthresh`) versus the mass difference precision (bounded by `labelthresh`). Correct interpretation of this figure can lead to better estimation on parameter stringency. For example: here we see that most peak pairs seem to have co-eluted perfectly simultaneously, while the deviation from the expected mass difference is distributed more evenly over the x-axis. However, in the peak pairs with a larger retention time difference, there is a trend towards having a larger deviation from the theoretical mass difference. So perhaps we have chosen our `elutionthresh` on the high side.
-If after inspection of the matched object, one would want to adjust some of the thresholds of the `pepmatch` function, the function does not have to be repeated. Instead, the much quicker function `lpm_refine` can be used. 
+If after inspection of the matched object, one would want to adjust some of the thresholds of the `pepmatch` function, the function does not have to be repeated. Instead, the much quicker function `lpm_refine` can be used. Note that a single value for the quantmin parameter means that both peaks in a pair have to be above this quantity threshold. If we want to make our analysis more sensitive to extreme up- or downregulations, we can set quantmin=c(0,minimal value). In this latter case, all peak pairs with at least one peak above the minimal value would be retained. 
 
 #### Cleaning your data<a id="3.4"></a>
 
