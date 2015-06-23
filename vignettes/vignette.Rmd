@@ -96,10 +96,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#",cache=T,cache.path = '.cache/'
 <br/>
 After installation, labelpepmatch can be loaded:
 
-```{r attach_labelpepmatch,eval=T,echo=F}
-library(labelpepmatch)
-```
-```{r attach_labelpepmatch_2,eval=F,echo=TRUE}
+```{r attach_labelpepmatch,eval=T,echo=T,message=F}
 library(labelpepmatch)
 ```
 ```{r set_seed,eval=T,echo=F}
@@ -116,7 +113,7 @@ using the stable isotopic tag TMAB (trimethyl ammonium butyric acid). However, a
 #### Some agreements on nomenclature<a id="1.2"></a>
 Every detected analyte within a mass spectrum will be called a **feature**. When two features appear to originate from the same peptide and only differ by their label, they will be called a **peak pair**.  
 When looking for differences between two peptidomes, we compare a measure of the quantity of peptides between conditions. Different mass spectrometers measure this quantity in different ways (e.g. centroid vs profile). Sometimes the best measure is the height of peaks (intensity), sometimes the surface under peaks is used (abundance). In this document, this will always be called **quantity**, be it intensity or abundance. Oftentimes, output of peak picking software will contain both. Here, the preferred quantity measure can be given as an input parameter to the read functions. 
-Throughout the entire pipeline, the samples where the first condition ("sol" in our example) is labelled with a light label are called **forward** and the samples where the first condition is labelled with a heavy label are called **reverse**. (see [`designvector`](#designvector)) When we use [limma](#chapter-8), the light labelled peptides will be called "red" (and are internally coded as labelled with cy5) and the heavy labelled peptides are called "green" (internally coded as labelled with cy3). 
+Throughout the entire pipeline, the samples where the first condition ("sol" in our example) is labelled with a light label are called **forward** and the samples where the first condition is labelled with a heavy label are called **reverse**. (see [`designvector`](#designvector)) When we use [limma](#chapter-7), the light labelled peptides will be called "red" (and are internally coded as labelled with cy5) and the heavy labelled peptides are called "green" (internally coded as labelled with cy3). 
 
 
 ## 2. Reading in data<a id="chapter-2"></a>
@@ -132,7 +129,7 @@ For our locust dataset, the designvector looks like  `c("sol","greg","F","R","F"
 This means that in the first sample, the "sol" condition is labelled with a light label, in the second, the "greg" condition is labelled with a light label, and so on. We would like to emphasize the importance of good experimental design with a balanced label swap. This is critical, since there is no way to tell apart label and condition effects if they are collinear. 
 
 #### Reading in an example dataset<a id="2.3"></a>
-For now, we will simply use one of the two example datasets^[Neuropeptides extracted from the corpora cardiaca of fifth instar nymphs of the desert locust *Schistocerca gregaria* under two rearing conditions: solitarious and gregarious, analyzed with ESI-Q-TOF. For details and another dataset on *C. elegans*, see Verdonck et al.] that are available within the package. If you want to read in your own data, use one of the read functions mentioned above. 
+For now, we will simply use the example dataset^[Neuropeptides extracted from the corpora cardiaca of fifth instar nymphs of the desert locust *Schistocerca gregaria* under two rearing conditions: solitarious and gregarious, analyzed with ESI-Q-TOF. For details, see Verdonck et al.] that is available within the package. If you want to read in your own data, use one of the read functions mentioned above. 
 
 ```{r load_locustdata,eval=T,tidy=TRUE}
 schistocerca_tmab<-locustdata
@@ -178,7 +175,7 @@ Some observations that can be made here:
 
 - The histograms in the upper row can be considered marginal projections on the axes of the first figure, which is a typical "top view" of the data. We observe that most analytes eluted in the first half of the chromatography, with a clear maximum between 25 and 30 minutes. Also the observed pattern of m/z is typical for a mixture of peptides analyzed with ESI-Q-TOF
 
-- <a id="quantdistr"></a>The quantity is an almost symmetric distribution on a log2 scale and there is no clear correllation between mass/charge ratio and quantity. Especially in run B there is a large proportion of features with very low quantity. One can remedy this by only using features that are above a certain quantity threshold. 
+- <a id="quantdistr"></a>The quantity is an almost symmetric distribution on a log2 scale and there is no clear correllation between mass/charge ratio and quantity. Especially in run B there is a large proportion of features with very low quantity. One can remedy this by only using features that are above a certain quantity threshold. Notice that because of the between-run matched nature of the input data, some features have quantities close to or equal to zero. This can be very helpful in case we want to look for on/off signals, but in many cases, these are just missing features. They can be left out more downstream in the analysis, using one of the filtering parameters.  
 
 - The charges seem to be Poisson-like distributed starting at 2 charges. Single charged analytes are uncommon.^[In the preprocessing of the data, most single charged features were discarded because the ESI-Q-TOF spectrum originally contained a lot of single charged contaminations. Only single charged features that were very clearly peptides were retained]
 
@@ -205,7 +202,13 @@ matched<-pepmatch(
 )
 ```
 
-A rather high number of parameters for peak pair detection can be tweaked. The two most important ones are the thresholds for mass and retention time. `elutionthresh` is the maximal allowed difference between retention times of two features to be considered a peak pair. Since the labels that we use are supposed to be chemically equivalent, the peak pairs should in theory co-elute. `labelthresh` is the maximal allowed deviation from the theoretical mass difference between two labelled peptides. So if the mass difference between two labels is 10.00, and you get two co-eluting peaks with masses 100.00 and 110.05, they will be considered a peak pair if `labelthresh >= 0.05`. For multiple labels, this threshold is not multiplied. So for the same example, two peaks of 100.00 and 120.09 will not be considered a peak pair if `labelthresh==0.05`. Further, we set some restrictions to the molecular weigth (at least the smallest possible dipeptide glycineglycine), number of labels (5 positions for a label to bind to is a lot for a neuropeptide), and the minimal quantity of signal for at least one feature within a peak pair. There will always be the inevitable trade-off between losing real positives and keeping false positives. Hence, the stringency of the peak pair detection parameters should be meticulously selected based on the specifications of the device used. Other cut-offs (quantity, mass, ...) can be based on the numbers and kinds of peptides that are expected, and some prior information like the [distribution of quantities](#quantdistr). It is noteworthy that taking a large fraction of "uninteresting" peak pairs along throughout the analysis, will lead to multiple testing issues, and in the end will dilute the power to detect real differences between conditions. 
+A rather high number of parameters for peak pair detection can be tweaked. The two most important ones are the thresholds for mass and retention time. `elutionthresh` is the maximal allowed difference between retention times of two features to be considered a peak pair. Since the labels that we use are supposed to be chemically equivalent, the peak pairs should in theory co-elute. Note however, that peak picking algorithms make mistakes, and some pre-processing software rounds elution times to discrete values. 
+<br/>
+`labelthresh` is the maximal allowed deviation from the theoretical mass difference between two labelled peptides. So if the mass difference between two labels is 10.00, and you get two co-eluting peaks with masses 100.00 and 110.05, they will be considered a peak pair if `labelthresh >= 0.05`. For multiple labels, this threshold is not multiplied. So for the same example, two peaks of 100.00 and 120.09 will not be considered a peak pair if `labelthresh==0.05`. Note that this threshold looks like a difference between two molecular weights rather than absolute values. This allows to use this threshold in a very strict way, because the error on values within a small interval will be small. 
+<br/>
+Further, we set some restrictions to the molecular weight (at least the smallest possible dipeptide glycineglycine), number of labels (5 positions for a label to bind to is a lot for a neuropeptide), and the minimal quantity of signal for at least one feature within a peak pair. 
+
+There will always be the inevitable trade-off between losing real positives and keeping false positives. Hence, the stringency of the peak pair detection parameters should be meticulously selected based on the specifications of the device used. Other cut-offs (quantity, mass, ...) can be based on the numbers and kinds of peptides that are expected, and some prior information like the [distribution of quantities](#quantdistr). It is noteworthy that taking a large fraction of "uninteresting" peak pairs along throughout the analysis, will lead to multiple testing issues, and in the end will dilute the power to detect real differences between conditions. 
 
 
 #### False discovery rate estimation<a id="3.2"></a>
@@ -263,6 +266,7 @@ The last panel shows a plot of the retention time precision (bounded by `elution
 If after inspection of the matched object, one would want to adjust some of the thresholds of the `pepmatch` function, the function does not have to be repeated. Instead, the much quicker function `lpm_refine` can be used. Note that a single value for the quantmin parameter means that both peaks in a pair have to be above this quantity threshold. If we want to make our analysis more sensitive to extreme up- or downregulations, we can set quantmin=c(0,minimal value). In this latter case, all peak pairs with at least one peak above the minimal value would be retained. 
 
 #### Cleaning your data<a id="3.4"></a>
+Finding peak pairs can be time consuming, and hence it might be convenient to do it only once, with rather lenient parameters, and refine in a next step. This is where the `lpm_refine` function comes in. Here for example, we reset the threshold for elution time difference to 0.15, and the allowed difference in mass within a peak pair to 0.03. We also set a minimal quantity. Note that the `quantmin` parameter is either a vector of two values (setting minima for the least and most abundant in a peak pair), or a single value, where both features within the peak pair have to exceed the set quantity. 
 
 ```{r lpm_refine_1,eval=T}
 matched<-lpm_refine(matched,elutionthresh=0.15,quantmin = 2**8)
@@ -272,7 +276,7 @@ And have a look at the output again (this time without printing in the terminal)
 lpm_summary(matched, printoutput = F, run=1, graphics=T)
 ```
 
-Note that compared with the first version of our `pepmatched` object, 24 out of 202 features were discarded, among them, 4 out of 10 features with more labels than charges disappeared, which is another confirmation that we were mainly discarding false positives. Since we expect all of them to be false positives anyway, we can do:
+Note that compared with the first version of our `pepmatched` object, 32 out of 133 features were discarded, among them, 4 out of 7 features with more labels than charges disappeared, which is another confirmation that we were mainly discarding false positives. Since we expect all of them to be false positives anyway, we can do:
 
 ```{r lpm_refine_2,eval=T}
 matched<-lpm_refine(matched,remove.more.labels.than.charges =T)
@@ -304,8 +308,7 @@ db<-download_lpm_db("desertlocust")
 db[38,]
 ```
 
-And a function to quality check this database. This function recalculates all molecular weights of the database and compares them to the database molecular weights. In our database, there are two clear mismatches that after closer investigation appear to be sequences where the MW is known from mass spectrometry, but the whole sequence is unknown. 
-
+And a function to quality check this database. This function recalculates all molecular weights of the database and compares them to the database molecular weights. It outputs a graph and a vector with all differences from calculated molecular weights. In our database, there are two clear mismatches that after closer investigation appear to be sequences where the MW is known from mass spectrometry, but the sequence is not entirely known. 
 
 ```{r QC_atabase,eval=T,fig.width=5}
 QC_database(db)
@@ -324,29 +327,26 @@ randomdb<-generate_random_db(db,plot=T)
 ```
 
 #### Mass matching peptides to a database<a id="4.3"></a>
-Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 0.1 Dalton interval. 
+Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval. 
 
-```{r pep_massmatch, eval=F,tidy=TRUE}
-pep.massmatch(input=c(1080.25, 1500.6) ,db=db, ID_thresh=0.1)
+```{r pep_massmatch, eval=F,tidy=TRUE,warning=FALSE}
+pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=10)
 ```
-```{r inspect_pep_massmatch, eval=T,tidy=TRUE,echo=F}
-knitr::kable(pep.massmatch(input=c(1080.25, 1500.61) ,db=db, ID_thresh=0.1)$matchlist)
+```{r inspect_pep_massmatch, eval=T,tidy=TRUE,echo=F,warning=FALSE}
+knitr::kable(pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=10)$matchlist)
 ```
 
 And we see that no match is found for the first mass, but the second one gets to be matched to sulfakinin. This function also has an FDR estimation based on the `generate_random_db` function, and an optional correction for systematic bias based on identifications. Caution should however be payed here, since this will only work with a sufficiently high number of real matches. This rather sketchy feature should be considered something interesting to have a look at, rather than a have-to-do. 
 
 #### Mass matching all features of a `pepmatched` object: the `pep.id` function. <a id="4.4"></a>
 
-As mentioned earlier, the identification function that takes a `pepmatched` object as input and hence fits right in the pipeline is `pep.id`. The parameter `ID_thresh` is just the maximum allowed difference between two masses for mass match. The database can either be an object from the environment, but it can also be a preset database, or a local one. So the two snippets of code shown will yield exactly the same results since the database that we read in earlier is the same as the preset database that is directly read from the `pep.id` function. 
-Finally, we here choose for 100 iterations of false discovery rate estimation. This means that for each run, 100 different databases will be generated with the `generate_random_db` function, and in each of them the identification frequency is recorded. This will yield a good estimate of the false discovery rate in a random peptide database. 
+As mentioned earlier, the identification function that takes a `pepmatched` object as input and hence fits right in the pipeline is `pep.id`. The parameter `ID_thresh` is just the maximum allowed difference between two masses for mass match. This time not in absolute values, but in ppm. The database can either be an object from the environment, but it can also be a preset database, or a local one. So the two snippets of code shown will yield exactly the same results since the database that we read in earlier is the same as the preset database that is directly read from the `pep.id` function. 
+Finally, we here choose for 10 iterations of false discovery rate estimation. This means that for each run, 10 different databases will be generated with the `generate_random_db` function, and in each of them the identification frequency is recorded. This will yield a good estimate of the false discovery rate in a random peptide database. 
 
-```{r pep.id_evaluated_with_3_iterations, eval=T,tidy=TRUE}
-matched_id<-pep.id  (pepmatched=matched,ID_thresh=0.1,db=db,cores=1,FDR=T,iterations=3)
+```{r pep.id_evaluated_with_3_iterations, eval=T,tidy=TRUE,warning=FALSE}
+matched_id<-pep.id  (pepmatched=matched,ID_thresh=10,db=db,cores=1,FDR=T,iterations=10)
 ```
 
-```{r pep.id_for_now_not_evaluated_with_100_iterations, eval=F,tidy=TRUE}
-matched_id<-pep.id  (pepmatched=matched,ID_thresh=0.1,presetdb="desertlocust",cores=1,FDR=T,iterations=100)
-```
 
 
 #### Visualising a `pepmatched` object with peptide identifications <a id="4.5"></a>

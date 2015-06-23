@@ -4,7 +4,7 @@
 #' @author Rik Verdonck & Gerben Menschaert 
 #' @seealso \code{\link{pep.id}}, \code{\link{pep.massmatch}}
 #' @param input          Numeric. Either a single value, a vector of values, or a dataframe or matrix with one column with name MW
-#' @param ID_thresh      Numeric. Maximal allowed mass difference (Da) for identification.
+#' @param ID_thresh      Numeric. Maximal allowed mass difference in ppm for identification. 
 #' @param presetdb       A preset database. For the future (not ready yet)         
 #' @param db             In case no preset database is chosen: a database (table) with the first 3 columns \code{name, MW} and \code{sequence} (as read in with the \code{\link{download_lpm_db}} function) The amino acid sequences have to obey rules when you want to use them for mass recalculation or generation of a decoy database. Amino acids have to be capitalized one letter codes. For details, see \code{\link{calculate_peptide_mass}}
 #' @param dbpath        Character. In case a local database is used. Should be the filepath of a table, separated by dbseparator, with first tree columns: name, mass in Dalton and sequence. 
@@ -26,7 +26,7 @@
 
 
 pep.massmatch <-
-function (input,db,presetdb=NA,dbpath=NA,dbseparator=",",dbheader=FALSE,ID_thresh=0.1,masscorrection=F,FDR=F,iterations=10,checkdb=F,graphics=F,verbose=F)
+function (input,db,presetdb=NA,dbpath=NA,dbseparator=",",dbheader=FALSE,ID_thresh=10,masscorrection=F,FDR=F,iterations=10,checkdb=F,graphics=F,verbose=F)
 {
   ### Read in database
   if (!is.na(presetdb))
@@ -65,7 +65,7 @@ if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n
 		{	  
         	for (j in 1 : nrow(db))
 			{ 
-           		if (abs(as.numeric(input$MW[i]) - as.numeric(db[j,2])) <= ID_thresh) 
+           		if (abs(as.numeric(input$MW[i]) - as.numeric(db[j,2])) <= as.numeric(input$MW[i])*ID_thresh*10e-6) 
            		{ 
            			idDifs <- c(idDifs, (as.numeric(input$MW[i]) - as.numeric(db[j,2])))
            		}
@@ -100,7 +100,7 @@ if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n
 	{  
 		for (j in 1 : nrow(db))
 		{ 
-    		if(abs((as.numeric(input$MW[i])+delta)- as.numeric(db[j,2])) <= ID_thresh)
+    		if(abs((as.numeric(input$MW[i])+delta)- as.numeric(db[j,2])) <= as.numeric(input$MW[i])*ID_thresh*10e-6)
             {
                 idDifsNew <- c(idDifsNew,(as.numeric(input$MW[i])+delta)- as.numeric(db[j,2]))
                 ###	print (c("MW",input[i,15],"pepMass",identifMatrix[j,5]))
@@ -135,7 +135,7 @@ if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n
             {
                 for(j in 1:nrow(db))
                 {
-                    if(abs((as.numeric(input$MW[i])+delta)- as.numeric(decoy[j,2])) <= ID_thresh)
+                    if(abs((as.numeric(input$MW[i])+delta)- as.numeric(decoy[j,2])) <= as.numeric(input$MW[i])*ID_thresh*10e-6)
                     {
                         idDifsDECOY <- c(idDifsDECOY,(as.numeric(input$MW[i])+delta)- as.numeric(decoy[j,2]))
                     }
