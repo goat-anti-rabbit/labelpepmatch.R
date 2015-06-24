@@ -50,7 +50,7 @@ if(ncol(as.data.frame(input))==1)
 
     input<-as.data.frame(input)
     colnames(input)<-"MW"
-    input<-cbind.data.frame("MW"=input,"N_identifications"=NA,"pepID"="unknown","pepseq"=NA,"pepmass"=NA,"delta_m"=NA)
+    input<-cbind.data.frame("MW"=input,"N_identifications"=NA,"pepID"="unknown","pepseq"=NA,"pepmass"=NA,"delta_m"=NA,stringsAsFactors=F)
 }
 if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n")}
 
@@ -95,7 +95,7 @@ if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n
 								###				Here the real identifications start				     ###
 								########################################################################
 								###	(delta-adjusted) MW's are compared to database of known peptides!
-    idDifsNew   <- c()
+    idDifsNew   <- NULL
 	for (i in 1 : nrow(input))
 	{  
 		for (j in 1 : nrow(db))
