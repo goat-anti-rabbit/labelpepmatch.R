@@ -86,7 +86,6 @@ knitr::opts_chunk$set(collapse = T, comment = "#",cache=T,cache.path = '.cache/'
 <br/>
 <br/>
   
-   <a id="1.1"></a>
 
 
 ## 1. Introduction<a id="chapter-1"></a>
@@ -266,7 +265,7 @@ The last panel shows a plot of the retention time precision (bounded by `elution
 If after inspection of the matched object, one would want to adjust some of the thresholds of the `pepmatch` function, the function does not have to be repeated. Instead, the much quicker function `lpm_refine` can be used. Note that a single value for the quantmin parameter means that both peaks in a pair have to be above this quantity threshold. If we want to make our analysis more sensitive to extreme up- or downregulations, we can set quantmin=c(0,minimal value). In this latter case, all peak pairs with at least one peak above the minimal value would be retained. 
 
 #### Cleaning your data<a id="3.4"></a>
-Finding peak pairs can be time consuming, and hence it might be convenient to do it only once, with rather lenient parameters, and refine in a next step. This is where the `lpm_refine` function comes in. Here for example, we reset the threshold for elution time difference to 0.15, and the allowed difference in mass within a peak pair to 0.03. We also set a minimal quantity. Note that the `quantmin` parameter is either a vector of two values (setting minima for the least and most abundant in a peak pair), or a single value, where both features within the peak pair have to exceed the set quantity. 
+Finding peak pairs can be time consuming, and hence it might be convenient to do it only once, with rather lenient parameters, and refine in a next step. This is where the `lpm_refine` function comes in. Here for example, we reset the threshold for elution time difference to 0.15, and the allowed mass difference within a peak pair to 0.03 Dalton. We also set a minimal quantity. Note that the `quantmin` parameter is either a vector of two values (setting minima for the least and most abundant in a peak pair), or a single value, where both features within the peak pair have to exceed the set quantity. Note that it is impossible to refine parameters to values less strict than the ones used to generate the `pepmatched` object. If you want to do this, you will have to re-run the `pepmatch` function. 
 
 ```{r lpm_refine_1,eval=T}
 matched<-lpm_refine(matched,elutionthresh=0.15,quantmin = 2**8)
@@ -327,7 +326,7 @@ randomdb<-generate_random_db(db,plot=T)
 ```
 
 #### Mass matching peptides to a database<a id="4.3"></a>
-Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval. 
+Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval, which would in this case be about 0.10 to 0.15 Da. Note that 10 ppm is probabily on the high side for most mass spectrometers, but this data was generated on a slightly older Q-TOF machine.  
 
 ```{r pep_massmatch, eval=F,tidy=TRUE,warning=FALSE}
 pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=10)
@@ -355,7 +354,7 @@ The output of this function will still be of the same `pepmatched` class, but wi
 ```{r lpm_summary_of_pepmatched_object_with_mass_matches, eval=T,fig.width = 12, fig.height = 6}
 lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 ```
-A total of 14 different neuropeptides have been mass matched to peak pairs, 12 of which in all runs. The estimated false discovery rate is around 20%. If identifications are considered a strong signal for genuine labelled peptides, it is interesting to remark that we observe the identified peptides to have a slightly higher quantity, both for light and heavy labelled peptides. Notice that the bias for the light labelled peptides to have a higher quantity is also clearly visible. Also we observe that most of the identified peptides appear to have very minor differences in retention time within the peak pair. 
+A total of 11 different neuropeptides have been mass matched to peak pairs in all runs. The estimated false discovery rate is in the order of magnitude of 20%. If identifications are considered a strong signal for genuine labelled peptides, it is interesting to remark that we observe the identified peptides to have a slightly higher quantity, both for light and heavy labelled peptides. However, this can also be due to the fact that usually the most abundant peptides are the best studied, generating a bias in identification. Especially for a non-model organism like the desert locust, we should not expect to be able to match all peak pairs to known peptides. Notice that the bias for the light labelled peptides to have a higher quantity is also clearly visible. Also we observe that most of the identified peptides appear to have only minor differences in retention time within the peak pair. Finally, it is interesting to note that also the peak pair detection estimates are lower than in the first version of this object. This is still due to the refinements that we made with the `lpm_refine` function. 
 
 Identified peptides have charges between one and three with a preference for double charges, and one single label. Looking deeper in the data, we notice that the same peptides are found both in single, double and triple charged form:
 

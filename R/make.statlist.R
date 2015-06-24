@@ -26,6 +26,9 @@
 #' @return An object of class \code{lpm_statlist}
 
 
+
+# to do: transform quantmin parameter to be the same as in upstream functions. 
+
 make.statlist <-
 function (                   
             pepmatched_object,

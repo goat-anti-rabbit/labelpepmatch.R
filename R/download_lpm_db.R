@@ -25,13 +25,13 @@ download_lpm_db <-function(db=c("desertlocust","celegans"))
     {
         dbURL<-"https://perswww.kuleuven.be/~u0065551/DATABASES/Sgreg_pep_db.csv" 
         dbtxt<-getURL(dbURL,ssl.verifypeer=FALSE)
-        db<-read.csv(text=dbtxt,header=F)
+        db<-read.csv(text=dbtxt,header=F,stringsAsFactors=F)
     }
     if(tolower(database)=="celegans")
     {
         dbURL<-"https://perswww.kuleuven.be/~u0065551/DATABASES/Celeg_pep_db.csv"
         dbtxt<-getURL(dbURL,ssl.verifypeer=FALSE)
-        db<-read.csv(text=dbtxt,header=F)
+        db<-read.csv(text=dbtxt,header=F,stringsAsFactors=F)
     }
     colnames(db)<-c("name", "MW", "sequence", "family","reference")[1:ncol(db)]
     return(db)

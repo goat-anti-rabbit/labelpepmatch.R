@@ -1,6 +1,6 @@
 #' Refine \code{pepmatched} objects. 
 #' 
-#' This function allows to make subselections of a \code{pepmatched} object with cutoffs for different parameters. In this way, the \code{pepmatch} function itself only has to be run once with not to strict parameters, and analysis can afterwards be refined.  
+#' This function allows to make subselections of a \code{pepmatched} object with cutoffs for different parameters. In this way, the \code{pepmatch} function itself only has to be run once with not to strict parameters, and analysis can afterwards be refined. Notice that it is impossible to refine parameters to less strict values than the ones used to generate the pepmatched object. 
 #' @param pepmatched_object  Object of class \code{pepmatched} that you want to trim. 
 #' @param labelthresh        Numeric. Threshold for molecular weight difference (in Dalton) between to peaks to differ from theoretical mass difference between two labelled peptides. Regardless of number of labels. 
 #' @param elutionthresh      Numeric. Threshold for elution time difference between two peaks to be considered a peakpair. 

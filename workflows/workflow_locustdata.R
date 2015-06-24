@@ -4,6 +4,7 @@ installdirectory<-"~/labelpepmatchtestinstall"
 dir.create(installdirectory, showWarnings = FALSE)
 
 library(devtools)
+#install_github("goat-anti-rabbit/labelpepmatch.R")
 with_libpaths(new=installdirectory,install_github("goat-anti-rabbit/labelpepmatch.R"))
 require("labelpepmatch",lib.loc=installdirectory)
 
@@ -12,11 +13,12 @@ schistocerca_tmab <- locustdata
 
 # Set seed for FDR estimation reproducibility
 set.seed(1)
-matched <- pepmatch(lpm_input = schistocerca_tmab, elutionthresh = 0.1, labelthresh = 0.03, 
+matched <- pepmatch(lpm_input = schistocerca_tmab, elutionthresh = 0.15, labelthresh = 0.05, 
     labelcountmax = 5, label = "TMAB", minmolweight = 132, quantmin = 0, 
     FDR = T, iterations = 4, cores = 8)
 
 matched<-lpm_refine(matched,remove.more.labels.than.charges=T)         
+
 db<-download_lpm_db("desertlocust")
 matched_id <- pep.id(pepmatched = matched, ID_thresh = 0.1, db = db, cores = 8, 
     FDR = T, iterations = 10)
