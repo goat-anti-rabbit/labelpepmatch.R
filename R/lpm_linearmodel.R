@@ -209,21 +209,21 @@ if(verbose==T){cat("executing linear model	") }		            ###
 if(cores==1)                                                    ###        
 {                                                               ###
                                                                 ###
-    LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %do%            				    ###     
+    LMlist<-foreach (k = 1:n) %do%            				          ###     
     {                                                           ###    
         lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4,design,label)   	###
-        return(lmlist)                                       	###                         
+        return(lmlist)                                       	  ###                         
     }                                                           ###
 }else # parallel !                                              ###            
 {                                                               ###
-  cl<- parallel::makeCluster(cores)                                       ###                 
+  cl<- parallel::makeCluster(cores)                             ###                 
   registerDoParallel(cl)                                        ###
-    LMlist<-foreach (k = 1:n, .export=ls(envir=globalenv())) %dopar%        			   		###     
+    LMlist<-foreach (k = 1:n) %dopar%        			   	        	###     
     {                                                           ###    
         lmlist<-vanilla(k,matrix1,matrix2,matrix3,matrix4,design,label)   	  ###
         return(lmlist)                                       	  ###             
     }                                                           ###
-      parallel::stopCluster(cl)                                           ###
+      parallel::stopCluster(cl)                                 ###
 }                                                               ###
                                                                 ###              
 ###################################################################

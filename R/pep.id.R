@@ -97,7 +97,7 @@ if(cores==1)
 {                                                           
   cl<- parallel::makeCluster(cores)                                                    
   registerDoParallel(cl)                                    
-  IDlistlist  <-foreach (run = 1:runcount, .export=ls(envir=globalenv())) %dopar%                    
+  IDlistlist  <-foreach (run = 1:runcount) %dopar%                    
     { 
 		matchlist   <-pepmatched[[run]]                                                      
 		matchlist   <-pep.massmatch(input=matchlist,db=db,ID_thresh=ID_thresh,masscorrection=masscorrection,FDR=FDR,iterations=iterations,checkdb=checkdb,graphics=F,verbose=verbose)# here I removed run=run, which seemed to be an old argument of the pep.massmatch function. See comments there.                                                  

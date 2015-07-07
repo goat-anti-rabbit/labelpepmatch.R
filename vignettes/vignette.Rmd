@@ -514,7 +514,7 @@ limma::plotMA(MA1, array = 1)
 In the MA plots there should be no systematic trends as a function of quantity: most genes should lie around zero. If we notice a trend along the A axis, or a systematic bias, we can execute a couple of normalisations within runs. 
 
 ```{r normalize_within_arrays,eval=T,tidy=TRUE,fig.width = 6,fig.height=4}
-MA2=normalizeWithinArrays(RG1,method="robustspline",bc.method="none")    
+MA2=normalizeWithinArrays(RG1,method="median",bc.method="none")    
 # method="loess" for loess normalisation, this is if label effects are quantity dependent, 
 # if this is not the case use "median", "robustspline" can be alternative for "loess"
 RG2=RG.MA(MA2)       
@@ -528,8 +528,8 @@ limma::plotMA(MA2, array = 1)
 To make the different runs as comparable as possible, we can also apply between array normalisations. Two common normalisations are the quantile and Aquantile normalisations. Quantile normalisation will ensure that the quantities will have the same empirical distribution across all arrays and channels, and Aquantile normalisation will ensure that the A-values (average quantities) will have the same empirical distribution across runs while leaving the M-values (log-ratios) unchanged. Let's do the Aquantile normalisation here:
 
 ```{r normalize_between_arrays,eval=T,tidy=TRUE,fig.width = 9,fig.height=9}
-MA3=normalizeBetweenArrays(MA2,method="quantile") 
-# most drastic normalisation would be "quantile", "Aquantile" would be less drastic
+MA3=normalizeBetweenArrays(MA2,method="Aquantile") 
+# most drastic normalisation would be "quantile", "Aquantile" is less drastic. 
 RG3=RG.MA(MA3)       
 # these would be the corresponding normalised R and G values backtransformed onto the original scale
 
@@ -544,9 +544,9 @@ plotDensities(MA2) # after loess within-array normalisation
 plotDensities(MA3) # after loess+Aquantile between-array normalisation
 ``` 
 
-Notice how the two "channels" are normalized towards each other. This is a very powerful normalization and it should be emphasized that this is probabily not necessary in every situation. (Tom, jij hier misschien nog wat info over? )
-
-Now we know how to create an RG list object and normalize it, there are ample possibilities for linear models on the data. In what follows, we will give some pointers without printing all the output. For more information, the reader is referred to the limma manual. 
+Notice how the two "channels" are normalized towards each other. This is a very powerful normalization and it should be emphasized that this is probabily not necessary in every situation. 
+Now we know how to create an RG list object and normalize it, there are ample possibilities for linear models on the data. In what follows, we will give some pointers without printing all the output. Here, we use a simple linear model after loess within-array normalization. 
+For more information, the reader is referred to the limma manual. 
 
 
 
