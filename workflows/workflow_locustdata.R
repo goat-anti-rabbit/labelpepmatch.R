@@ -66,6 +66,9 @@ model$model[rownames(model$model) %in% c('347_954','65_195','524_1514','210_535'
 masses<-(locustdata$frame$mz_1*locustdata$frame$z)-(locustdata$frame$z*1.007276)
             
        
+       
+       
+       
       
 library(limma)      
 
@@ -80,55 +83,61 @@ RG2=RG.MA(MA2)
 limma::plotMA(MA2, array = 1) 
 
 
-MA3=normalizeBetweenArrays(MA2,method="Aquantile") 
-# most drastic normalisation would be "quantile", "Aquantile" would be less drastic
+MA3=normalizeBetweenArrays(MA2,method="quantile") 
+# Most drastic normalisation is "quantile", "Aquantile" would be less drastic
 RG3=RG.MA(MA3)       
 # these would be the corresponding normalised R and G values backtransformed onto the original scale
 
 # DIAGNOSTIC PLOTS: let's see how the Aquantile normalisation affects the distribution of the R and G intensities:
-par(mfrow = c(2, 3))                                    # now we make a grid with 1 row and 3 columns
-plotDensities(RG1) # raw, Agilent preprocessed R and G intensities
-plotDensities(RG2) # after loess within-array normalisation
-plotDensities(RG3) # after loess+Aquantile between-array normalisation
-
-plotDensities(MA1) # raw, Agilent preprocessed R and G intensities
-plotDensities(MA2) # after loess within-array normalisation
-plotDensities(MA3) # after loess+Aquantile between-array normalisation
-    
- 
-# linear model without normalization
-design=model.matrix(as.formula("~ Cy3"),data=RG1$targets,contrasts = list(Cy3 = "contr.sum"))[,2]
-fit = lmFit(MA1,design,ndups=1,block=NULL)
-fit.eb=eBayes(fit,proportion=0.1)
-stats0=topTable(fit.eb,coef=1,number=100,adjust.method="BH",genelist=fit$genes,sort.by="p")
-head(stats0)   
+par(mfrow = c(1, 3))# now we make a grid with 1 row and 3 columns
+plotDensities(RG1) # raw R and G intensities
+plotDensities(RG2) # after median within-array normalisation
+plotDensities(RG3) # after median within array and Aquantile between-array normalisation
 
 # linear model with label as covariate
-stats1<-model$model
-head(stats1)
+stats0<-model$model
+#head(stats0)
+
+# linear model without normalization
+design=model.matrix(as.formula("~ Cy3"),data=RG1$targets,contrasts = list(Cy3 = "contr.sum"))[,2]
+fit1 = lmFit(MA1,design,ndups=1,block=NULL)
+fit.eb1=eBayes(fit1,proportion=0.1)
+stats1=topTable(fit.eb1,coef=1,number=100,adjust.method="BH",genelist=fit1$genes,sort.by="none")
+#head(stats1)   
 
 # linear model for within array normalisation
 design=model.matrix(as.formula("~ Cy3"),data=RG2$targets,contrasts = list(Cy3 = "contr.sum"))[,2]
-fit = lmFit(MA2,design,ndups=1,block=NULL)
-fit.eb=eBayes(fit,proportion=0.1)
-stats2=topTable(fit.eb,coef=1,number=100,adjust.method="BH",genelist=fit$genes,sort.by="p")
-head(stats2)
+fit2 = lmFit(MA2,design,ndups=1,block=NULL)
+fit.eb2=eBayes(fit2,proportion=0.1)
+stats2=topTable(fit.eb2,coef=1,number=100,adjust.method="BH",genelist=fit2$genes,sort.by="none")
+#head(stats2)
     
 # linear model for between array normalization            
 design=model.matrix(as.formula("~ Cy3"),data=RG3$targets,contrasts = list(Cy3 = "contr.sum"))[,2]
-fit = lmFit(MA3,design,ndups=1,block=NULL)
-fit.eb=eBayes(fit,proportion=0.1)
-stats3=topTable(fit.eb,coef=1,number=100,adjust.method="BH",genelist=fit$genes,sort.by="p")
-head(stats3)
+fit3 = lmFit(MA3,design,ndups=1,block=NULL)
+fit.eb3=eBayes(fit3,proportion=0.1)
+stats3=topTable(fit.eb3,coef=1,number=100,adjust.method="BH",genelist=fit3$genes,sort.by="none")
+#head(stats3)
 
-supermatrix<-merge(stats0,stats1,by=0)
-supermatrix<-merge(supermatrix,stats2,by="ID")
-supermatrix<-merge(supermatrix,stats3,by="ID")
+# remarkable:
+stats2==stats3
+
+supermatrix<-merge(stats0[,c(26,22,23,2,3,1)],stats1[,c(1,3,6,7)],by=0)
+supermatrix<-merge(supermatrix,stats2[,c(1,3,6,7)],by="ID")
+supermatrix<-merge(supermatrix,stats3[,c(1,3,6,7)],by="ID")[,-2]
+colnames(supermatrix)<-c("ID","pepID","MW","labelcount","logFC_0","p_0","p_adj_0","logFC_1","p_1","p_adj_1",
+"logFC_2","p_2","p_adj_2","logFC_3","p_3","p_adj_3")
+# and sort it according to MW if you want
+supermatrix<-supermatrix[order(supermatrix$MW),]
+# or according to adjusted p value 
+supermatrix<-supermatrix[order(supermatrix$p_adj_3),]
+
 
 write.table(x=supermatrix,file="supermatrix.csv",sep=",",row.names=F)
 
 
-
-            
+plot(RG2$R-RG2$G,RG3$R-RG3$G)
+plot(RG2$R/RG2$G,RG3$R/RG3$G)
+       
             
                     
