@@ -29,6 +29,7 @@
 # Checkdb parameter
 # Link to a mascot server.  
 # Model a normal mass distribution around every peptide in the database, and assign "chance" to every query peptide. Problem here is we don't know the sd etc for every MS device.   
+# Set delta_m column to ppm 
 
 
 pep.id <-

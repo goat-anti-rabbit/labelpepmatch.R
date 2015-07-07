@@ -26,9 +26,8 @@
 #' @exportClass pepmatched
 #' @return An object of class \code{pepmatched} without mass matchings. This object can serve as an imput to the \code{pep.id} function, or in case of no mass matching, can go directly in \code{make.statlist}. If FDR is TRUE, it also contains a summary of the false discovery rate: the mean, median, minimal and maximal number of false positive hits per run over all iterations, along with their proportion to the presumed real positives. Finally, if FDR is TRUE, the pepmatched object contains all the mass match precisions of the false positive hits along with the actual mockdata used for FDR estimation. Don't for
 
-#### TO DO: samplename_L en samplename_H zijn volledig nutteloze kolommen. Die moeten er nog uit. 
+#### TO DO: samplename_L en samplename_H zijn volledig nutteloze kolommen. Die moeten er nog uit. ALSOOK m_L en m_H kolommen...
 #### TO DO: check wat er gebeurt als FDR nullen oplevert
-#### TO DO: at this moment, the lpm_refine function does not refine the FDR. This is difficult because for now the "pepmatched" object does not contain the information to do this (or not ready made). For now, we'll just throw a warning that the FDR will not get refined. However, in the future I want the FDR to also get refined. Perhaps we could get rid of all the mockdata (blows up the pepmatched object) and just get a decent summary of all mock peak pairs. 
 
 
 pepmatch <-

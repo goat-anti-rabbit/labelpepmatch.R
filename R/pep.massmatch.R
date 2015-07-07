@@ -1,4 +1,4 @@
-#' Mass match peak pairs. 
+#' Mass match a vector of masses to a database. 
 #' 
 #' Mass match peak pairs from a pepmatched object to known databases. Can call inbuilt databases, but you can also use your own local database.
 #' @author Rik Verdonck & Gerben Menschaert 
@@ -22,7 +22,7 @@
 
 ### TO DO: plot functie werkt nog niet. Heb ze voorlopig uitgeschakeld. 
 ### TO DO: iets is niet in orde met de input-output structuur. Als dit een standalone functie is, kan de output class niet "pepmatched" zijn! Er was oorspronkelijk een "run=1" parameter, maar die heb ik eruit gehaald omdat hij enkel voorkomt in de uitgehashte stukjes. Dit dient nagekeken te worden!
-
+### TO DO: N_identifications kolom blijft leeg bij standalone gebruik. 
 
 
 pep.massmatch <-

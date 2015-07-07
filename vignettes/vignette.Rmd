@@ -2,7 +2,7 @@
 title: "labelpepmatch"
 author: "Rik Verdonck et al."
 date: '`r Sys.Date()`' 
-output: rmarkdown::html_vignette 
+output: rmarkdown::html_vignette
 vignette: |
   %\VignetteIndexEntry{Vignette Title} 
   %\VignetteEngine{knitr::knitr} 
@@ -326,24 +326,24 @@ randomdb<-generate_random_db(db,plot=T)
 ```
 
 #### Mass matching peptides to a database<a id="4.3"></a>
-Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval, which would in this case be about 0.10 to 0.15 Da. Note that 10 ppm is probabily on the high side for most mass spectrometers, but this data was generated on a slightly older Q-TOF machine.  
+Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval, which would in this case be about 0.10 to 0.15 Da. Note that 5 ppm is probabily on the high side for most mass spectrometers, but this data was generated on a slightly older Q-TOF machine.  
 
 ```{r pep_massmatch, eval=F,tidy=TRUE,warning=FALSE}
-pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=10)
+pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=5)
 ```
 ```{r inspect_pep_massmatch, eval=T,tidy=TRUE,echo=F,warning=FALSE}
-knitr::kable(pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=10)$matchlist)
+knitr::kable(pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=5)$matchlist)
 ```
 
 And we see that no match is found for the first mass, but the second one gets to be matched to sulfakinin. This function also has an FDR estimation based on the `generate_random_db` function, and an optional correction for systematic bias based on identifications. Caution should however be payed here, since this will only work with a sufficiently high number of real matches. This rather sketchy feature should be considered something interesting to have a look at, rather than a have-to-do. 
 
 #### Mass matching all features of a `pepmatched` object: the `pep.id` function. <a id="4.4"></a>
 
-As mentioned earlier, the identification function that takes a `pepmatched` object as input and hence fits right in the pipeline is `pep.id`. The parameter `ID_thresh` is just the maximum allowed difference between two masses for mass match. This time not in absolute values, but in ppm. The database can either be an object from the environment, but it can also be a preset database, or a local one. So the two snippets of code shown will yield exactly the same results since the database that we read in earlier is the same as the preset database that is directly read from the `pep.id` function. 
-Finally, we here choose for 10 iterations of false discovery rate estimation. This means that for each run, 10 different databases will be generated with the `generate_random_db` function, and in each of them the identification frequency is recorded. This will yield a good estimate of the false discovery rate in a random peptide database. 
+As mentioned earlier, the identification function that takes a `pepmatched` object as input and hence fits right in the pipeline is `pep.id`. The parameter `ID_thresh` is just the maximum allowed difference between two masses for mass match. This time not in absolute values, but in ppm. The database can either be an object from the environment, but it can also be a preset database, or a local one. 
+We here choose for 10 iterations of false discovery rate estimation. This means that for each run, 10 different databases will be generated with the `generate_random_db` function, and in each of them the identification frequency is recorded. This will yield a good estimate of the false discovery rate in a random peptide database. 
 
-```{r pep.id_evaluated_with_3_iterations, eval=T,tidy=TRUE,warning=FALSE}
-matched_id<-pep.id  (pepmatched=matched,ID_thresh=10,db=db,cores=1,FDR=T,iterations=10)
+```{r pep.id_evaluated_with_10_iterations, eval=T,tidy=TRUE,warning=FALSE}
+matched_id<-pep.id  (pepmatched=matched,ID_thresh=5,db=db,cores=1,FDR=T,iterations=10)
 ```
 
 
