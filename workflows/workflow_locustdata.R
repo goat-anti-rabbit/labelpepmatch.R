@@ -62,10 +62,86 @@ model$model[rownames(model$model) %in% c('347_954','65_195','524_1514','210_535'
             
             
             
-### Checking the identifications of non-peak pairs
-masses<-(locustdata$frame$mz_1*locustdata$frame$z)-(locustdata$frame$z*1.007276)
-            
-       
+### Checking the properties and identifications of non-peak pairs
+IDs<-NULL
+runcount<-8
+for (i in 1:runcount)
+{
+	IDs<-c(IDs,matched[[i]]$ID_L,matched[[i]]$ID_H)
+}
+IDs<-unique(IDs)
+
+nonpeakpairframe<-schistocerca_tmab$frame[schistocerca_tmab$frame$id%in%IDs==F,]
+nonpeakpair<-schistocerca_tmab
+nonpeakpair$frame<-nonpeakpairframe
+
+onlypeakpairframe<-schistocerca_tmab$frame[schistocerca_tmab$frame$id%in%IDs,]
+onlypeakpair<-schistocerca_tmab
+onlypeakpair$frame<-onlypeakpairframe
+
+masses<-(nonpeakpairframe$mz_1*nonpeakpairframe$z)-(nonpeakpairframe$z*1.007276)
+x<-pep.massmatch(input=masses,presetdb="desertlocust",FDR=T,iterations=10,ID_thresh=5)
+
+
+# supplementary figure I
+par(mfrow=c(2,2))
+hist(matched$matchlist_B$MW,main="MW of peak pair features",xlab="WM")
+hist(masses,main="MW of non peak pair features",xlab="MW")
+
+boxplot(log2(onlypeakpair$frame[,11:18]),ylim=c(0,25),main="quantity of peak pair features")
+boxplot(log2(nonpeakpair$frame[,11:18]),ylim=c(0,25),main="quantity of non peak pair features")
+
+
+# supplementary figure  II
+plot(log2(nonpeakpair$frame[,11:18]),ylim=c(0,25),main="quantity of non peak pair features",pch="*",col="darkblue")
+          
+# difference in quantity
+sapply(log2(onlypeakpair$frame[,11:18]+0.01),mean)-sapply(log2(nonpeakpair$frame[,11:18]+0.01),mean)
+sapply(log2(onlypeakpair$frame[,11:18]+0.01),median)-sapply(log2(nonpeakpair$frame[,11:18]+0.01),median)
+sapply(onlypeakpair$frame[,11:18],median)/sapply(nonpeakpair$frame[,11:18],median)
+sapply(onlypeakpair$frame[,11:18],mean)/sapply(nonpeakpair$frame[,11:18],mean)
+
+# supplementary figure III
+plot(masses,nonpeakpairframe$Ret_1,pch=nonpeakpairframe$z,xlab="MW",ylab="retention time")
+points(matched[[1]]$MW,matched[[1]]$ret_L,pch=matched[[1]]$z_L,col="red")
+legend(x=4100,y=48,c(1,2,3,4,5,6,"no peak pair","peak pair"),title="charge",pch=c(1,2,3,4,5,6,15,15),col=c(rep("black",7),"red"))
+
+
+alldeconvolutedmasses<-c(matched[[1]]$m_L,matched[[1]]$m_H)
+
+# difference between non peak pair masses with themselves
+DIF<-abs(as.vector(outer(masses,masses,'-')))
+# difference between non peak pair masses and real masses of labeled peptides (including both D0 and D9)
+DIF<-abs(as.vector(outer(alldeconvolutedmasses,masses,'-')))
+# difference between non peak pair masses and masses of labeled peptides without their labels 
+DIF<-abs(as.vector(outer(matched[[1]]$MW,masses,'-')))
+# differences between non peak pair masses and masses of known Schistocerca peptides
+DIF<-abs(as.vector(outer(db$MW,masses,'-')))
+# differences between non peak pair masses and masses of detected Schistocerca peptides
+identifiedpeptidemasses<-matched_id[[1]]$pepmass[!is.na(matched_id[[1]]$pepmass)]
+DIF<-abs(as.vector(outer(identifiedpeptidemasses,masses,'-')))
+
+
+
+
+DIF<-round(DIF)
+DIF<-DIF[DIF<300]
+#DIF<-DIF[DIF>100]
+plot(table(DIF),ylab="frequency",xlab="mass difference")
+lines(table(DIF))
+
+#9 Dalton
+abline(v=9,col="red")
+#light TMAB
+abline(v=128,col="red")
+#heavy TMAB
+abline(v=137,col="red")
+#sodium
+abline(v=23,col="red")
+#NHS
+abline(v=115,col="red")
+# 
+
        
        
        
