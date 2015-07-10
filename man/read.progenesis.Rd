@@ -36,7 +36,7 @@ read.progenesis(indata = file.choose(), designvector, samplenames = NA,
 An object of class \code{lpm_input} that that can be used for subsequent analysis using labelpepmatch functions. Feeds straigth in the \code{pepmatch} function.
 }
 \description{
-Read in data generated with progenesis LC-MS. Use the standard output function in progenesis and write your file to a table or csv. Do not bother about extra statistics columns. Do not normalize data.
+Read in data generated with progenesis LC-MS. Use the standard output function in progenesis and write your file to a table or csv. Do not bother about extra statistics columns. Normalizing the data is not neccesary.
 }
 \author{
 Rik Verdonck & Gerben Menschaert

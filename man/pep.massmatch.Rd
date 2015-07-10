@@ -2,10 +2,10 @@
 % Please edit documentation in R/pep.massmatch.R
 \name{pep.massmatch}
 \alias{pep.massmatch}
-\title{Mass match peak pairs.}
+\title{Mass match a vector of masses to a database.}
 \usage{
 pep.massmatch(input, db, presetdb = NA, dbpath = NA, dbseparator = ",",
-  dbheader = FALSE, ID_thresh = 0.1, masscorrection = F, FDR = F,
+  dbheader = FALSE, ID_thresh = 10, masscorrection = F, FDR = F,
   iterations = 10, checkdb = F, graphics = F, verbose = F)
 }
 \arguments{
@@ -21,7 +21,7 @@ pep.massmatch(input, db, presetdb = NA, dbpath = NA, dbseparator = ",",
 
 \item{dbheader}{Logical. Does the database have a header? Default FALSE}
 
-\item{ID_thresh}{Numeric. Maximal allowed mass difference (Da) for identification.}
+\item{ID_thresh}{Numeric. Maximal allowed mass difference in ppm for identification.}
 
 \item{masscorrection}{Logical. Should masses be corrected on the basis of identifications? Caution should be payed here, since this will only work with a sufficiently high number of real matches. This rather sketchy feature should be considered something interesting to have a look at, rather than a compulsory part of the pipeline. Always also run without mass correction and compare!!! Default is FALSE.}
 

@@ -20,7 +20,7 @@ lpm_refine(pepmatched_object, labelthresh, elutionthresh, MWmin, MWmax,
 
 \item{MWmax}{Numeric. Maximal molecular weight of the peptide without labels.}
 
-\item{quantmin}{Numeric. Minimal quantity (intensity or abundance). This is an AND function, so both peaks in a peak pair have to be below this quantity in order to be discarted.}
+\item{quantmin}{Numeric vector of one or two elements. Minimal untransformed quantity for a feature to be retained. The highest value of the vector is the cutoff for the most abundant peak in a pair, the lowest for the least abundant. If you want to make sure you pick up extreme up-or downregulations, the vector should contain one zero or very small number. If you want to discart a peak pair once one of the peaks is below a quantity threshold, you can set the threshold with one minimal value (a vector with one element). This is equivalent to a vector with two equal elements.}
 
 \item{quantmax}{Numeric. Maximal quantity (intensity or abundance). This is an AND function, so both peaks in a peak pair have to be above this quantity in order to be discarted.}
 
@@ -39,6 +39,6 @@ lpm_refine(pepmatched_object, labelthresh, elutionthresh, MWmin, MWmax,
 \item{only.identified}{Logical. Only features that have been identified with mass match are retained.}
 }
 \description{
-This function allows to make subselections of a \code{pepmatched} object with cutoffs for different parameters. In this way, the \code{pepmatch} function itself only has to be run once with not to strict parameters, and analysis can afterwards be refined.
+This function allows to make subselections of a \code{pepmatched} object with cutoffs for different parameters. In this way, the \code{pepmatch} function itself only has to be run once with not to strict parameters, and analysis can afterwards be refined. Notice that it is impossible to refine parameters to less strict values than the ones used to generate the pepmatched object.
 }
 

@@ -1,6 +1,6 @@
 #' Read progenesis data.
 #' 
-#' Read in data generated with progenesis LC-MS. Use the standard output function in progenesis and write your file to a table or csv. Do not bother about extra statistics columns. Do not normalize data.  
+#' Read in data generated with progenesis LC-MS. Use the standard output function in progenesis and write your file to a table or csv. Do not bother about extra statistics columns. Normalizing the data is not neccesary. 
 #' 
 #' @author Rik Verdonck & Gerben Menschaert    
 #' @param indata       Character. A table exported from progenesis LC-MS. Either reads a filepath, or reads the file directly if you are in the right folder. If no indata is specified, a prompt is presented. 

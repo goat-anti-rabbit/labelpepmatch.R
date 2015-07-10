@@ -28,7 +28,7 @@ pepmatch(lpm_input, elutionthresh = 0.2, elutionunit = "minutes",
 
 \item{minmolweight}{Numeric. Minimal molecular weight for a peptide to be retained. Default is 132, the smallest possible peptide.}
 
-\item{quantmin}{Numeric. Minimal untransformed quantity for a feature to be retained. Caution: this is an OR function, so if one of both peaks in a peakpair is above quantmin, the peakpair is retained.}
+\item{quantmin}{Numeric vector of one or two elements. Minimal untransformed quantity for a feature to be retained. The highest value of the vector is the cutoff for the most abundant peak in a pair, the lowest for the least abundant. If you want to make sure you pick up extreme up-or downregulations, the vector should contain one zero or very small number. If you want to discart a peak pair once one of the peaks is below a quantity threshold, you can set the threshold with one minimal value (a vector with one element). This is equivalent to a vector with two equal elements.}
 
 \item{FDR}{Logical. Generates mock data according to a restricted randomization procedure that produces mock data with a very comparable structure to the original data. Structure elements that are retained are the dispersion of features in the retention time - m/z space and the structure of decimals for m/z. This is important because decimals are non random in m/z data. For more information see \code{\link{lpm_mockdata}}.}
 
