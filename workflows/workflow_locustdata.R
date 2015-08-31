@@ -19,8 +19,7 @@ require("labelpepmatch",lib.loc=installdirectory)
 schistocerca_tmab <- locustdata
 
 # Set seed for FDR estimation reproducibility
-set.seed(1)
-
+set.seed(7)
 # Search peak pairs without minimal quantity
 matched <- pepmatch(lpm_input = schistocerca_tmab, elutionthresh = 0.15, labelthresh = 0.05, 
     labelcountmax = 5, label = "TMAB", minmolweight = 132, quantmin = 0, 
@@ -37,7 +36,7 @@ db<-download_lpm_db("desertlocust")
 
 
 # Set seed for FDR estimation reproducibility
-set.seed(1)
+set.seed(7)
 # mass match peak pairs to database
 matched_id <- pep.id(pepmatched = matched, ID_thresh = 5, db = db, cores = 8, 
     FDR = T, iterations = 10)
@@ -46,7 +45,7 @@ matched_id <- pep.id(pepmatched = matched, ID_thresh = 5, db = db, cores = 8,
 #identifieds<-lpm_refine(matched_id,only.identified=T)
 
 # Make a statlist object. Peak pairs have to be found in all runs. 
-statlist<-make.statlist  (pepmatched_object=matched_id,cutoff=1,logtransform=T)
+statlist<-make.statlist  (pepmatched_object=matched_id,cutoff=1,logtransform=T,quantmin=2**8)
                 
                 
 model0 <- lpm_linearmodel(statlist, method = "vanilla", p.adjust.method = "BH", cores = 8)

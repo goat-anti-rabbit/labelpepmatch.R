@@ -196,7 +196,7 @@ matched<-pepmatch(
   minmolweight=132,
   quantmin=0,
   FDR=T,
-  iterations=3,
+  iterations=10,
   cores=1
 )
 ```
@@ -342,6 +342,10 @@ And we see that no match is found for the first mass, but the second one gets to
 As mentioned earlier, the identification function that takes a `pepmatched` object as input and hence fits right in the pipeline is `pep.id`. The parameter `ID_thresh` is just the maximum allowed difference between two masses for mass match. This time not in absolute values, but in ppm. The database can either be an object from the environment, but it can also be a preset database, or a local one. 
 We here choose for 10 iterations of false discovery rate estimation. This means that for each run, 10 different databases will be generated with the `generate_random_db` function, and in each of them the identification frequency is recorded. This will yield a good estimate of the false discovery rate in a random peptide database. 
 
+
+```{r set_seed2,eval=T,echo=F}
+set.seed(7)
+```
 ```{r pep.id_evaluated_with_10_iterations, eval=T,tidy=TRUE,warning=FALSE}
 matched_id<-pep.id  (pepmatched=matched,ID_thresh=5,db=db,cores=1,FDR=T,iterations=10)
 ```
@@ -465,18 +469,12 @@ Looking at either of these heatmaps, one would not be able to infer the labeling
 
 For example, when we look at the constrast heat map, we clearly see that not all differences are equally homogeneous. But, nothing in biology is ever completely black and white (or red and green for that matter). Even more interestingly, the clustering dendrograms left to the heatmap shows us that some features show remarkable similarities in their patterns over different runs. For example, there is one "clade" where we see pyrokinin 5 popping up twice, and on top of that, some other features that show remarkable similarities. In order to take a closer look in this cluster, we only take the subset of our linear model that contains these features. 
 
+
 ```{r further_inspect_model,eval=T,tidy=TRUE}
-### Note to self: 
-### Hier is een aanpassing nodig: ik wil eigenlijk de eerste code uitvoeren 
-### maar aangezien de "isID" kolom NA's geeft ipv iets in de aard van "unknown"
-### lukt dat niet. Ik ga dit aanpassen in het identificatiescript (of vroeger), 
-### maar moet vervolgens controleren of de pipeline nergens anders clasht.
-### Vermoedelijk niet, behalve mss in heatmap functie. 
-#model$model[rownames(model$model) %in% c("347_954","65_195","524_1514","210_535") | model$model$pepID == "Scg-PK-5" ,c(18,22,23,26,27)]
-model$model[rownames(model$model) %in% c("347_954","65_195","524_1514","210_535","217_538","8337_86"),c(18,22,23,26,27)]
+knitr::kable(model$model[rownames(model$model) %in% c("262_614", "65_187", "544_1384", "313_973") | model$model$pepID %in% c("Scg-PK-4","Scg-PK-5"), c(18, 22, 23, 26, 27)],digits=3)
 ``` 
 
-This closer look gives away that we are actually looking at only 3 different peptides, with charges ranging between 2 and 4. Most probabily, since the patterns of expression for the 1644 Da and the 2909 Da peptides align so well, we are looking at a longer isoform or precursor of the Scg-PK-5 peptide. 
+This closer look gives away that we are actually looking at only 3 different peptides, with charges ranging between 2 and 4. Most probabily, since the patterns of expression for the 1644 Da and the 2909 Da peptides align so well, we are looking at a longer isoform or precursor of the Scg-PK-5 peptide. The 790 Da peptide remains unkown, but it may well be a fragment that is also co-encoded in the larger precursor. 
 
 
 
@@ -499,7 +497,11 @@ knitr::kable(head(RG1$Rb))
 knitr::kable(RG1$targets)
 ``` 
 
-Note that in the limma syntax, the two channels are called "red" (corresponds to cy5) and "green" (corresponds to cy3). And, for consistency reasons, we will always call the light channel "red" and the heavy channel "green". (note to self: nakijken, volgens mij doet het script het nog niet consistent nu)Since our mass spectrum does not really have a background signal, the background matrices are zero matrices. 
+Note that in the limma syntax, the two channels are called "red" (corresponds to cy5) and "green" (corresponds to cy3). And, for consistency reasons, we will always call the light channel "red" and the heavy channel "green". 
+
+<!--note to self: nakijken, volgens mij doet het script het nog niet consistent nu-->
+
+Since our mass spectrum does not really have a background signal, the background matrices are zero matrices. 
 
 Next, we turn this object in an `MAList` object and plot
 ```{r make_MAList_object,eval=T,tidy=TRUE,fig.width = 6,fig.height=4}
