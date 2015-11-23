@@ -21,7 +21,7 @@
 #' @import doParallel
 #' @export
 #' @exportClass pepmatched
-#' @return An object of class \code{pepmatched} with added mass matches that can be used for subsequent analysis using labelpepmatch functions. 
+#' @return An object of class \code{pepmatched} with added mass matches that can be used for subsequent analysis using labelpepmatch functions. This pepmatched object will also contain a couple of extras like detailed pep.id parameters, details about the FDR estimation, a list of identified peptides with their counts, and a deltavector with the mass shifts in case the mass correction has been applied.
 
 
 ### TO DO
@@ -147,7 +147,7 @@ for (i in 1:runcount)
 {
 	pepmatched[[i]]<-as.data.frame(IDlistlist[[i]][[1]])
 	deltavector<-c(deltavector,IDlistlist[[i]][[2]])
-	idpep<-c(idpep,IDlistlist[[i]][[3]])
+	idpep<-c(idpep,IDlistlist[[i]][[1]]$pepID)
 }
 ### Now idpep is just a vector with peptide names, many of which will occur multiple times.
 ### We now transform it into a nice little table that tells us which peptide has been found in how many runs... 

@@ -18,7 +18,7 @@
 #' @param verbose        Logical. If TRUE verbose output is generated during identifications. 
 #' @export
 #' @exportClass pep_massmatched
-#' @return An object of class \code{pepmatched} that can be used for subsequent analysis using labelpepmatch functions.
+#' @return An object of class \code{pep_massmatched} that can be used for subsequent analysis using labelpepmatch functions.
 
 ### TO DO: plot functie werkt nog niet. Heb ze voorlopig uitgeschakeld. 
 ### TO DO: iets is niet in orde met de input-output structuur. Als dit een standalone functie is, kan de output class niet "pepmatched" zijn! Er was oorspronkelijk een "run=1" parameter, maar die heb ik eruit gehaald omdat hij enkel voorkomt in de uitgehashte stukjes. Dit dient nagekeken te worden!
@@ -203,7 +203,7 @@ if("MW"%in%colnames(input)==F){stop("No column with column 'MW' found in input\n
 		"dblist"=dblist
 		)
 		
-	class(identifylist)=="lpm_massmatched"
+	class(identifylist)="pep_massmatched"
 								
 	return(identifylist)					
 }

@@ -36,7 +36,7 @@ pep.massmatch(input, db, presetdb = NA, dbpath = NA, dbseparator = ",",
 \item{verbose}{Logical. If TRUE verbose output is generated during identifications.}
 }
 \value{
-An object of class \code{pepmatched} that can be used for subsequent analysis using labelpepmatch functions.
+An object of class \code{pep_massmatched} that can be used for subsequent analysis using labelpepmatch functions.
 }
 \description{
 Mass match peak pairs from a pepmatched object to known databases. Can call inbuilt databases, but you can also use your own local database.

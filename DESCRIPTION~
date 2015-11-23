@@ -1,6 +1,6 @@
 Package: labelpepmatch
-Title: Tools For Interpreting Mass Spectra With Labelled Peptides
-Description: Labelpepmatch is a package for the interpretation of nano-LC-MS spectra of peptides labelled with stable isotope tags. It takes as input a file with peaks with their m/z, retention time and signal quantity. Next to functions to detect peak pairs and mass match them to a database of known peptides, the package also contains appropriate statistics, inference and visualisation tools.  
+Title: Tools For Interpreting Mass Spectra With Labeled Peptides
+Description: Labelpepmatch is a package for the interpretation of nano-LC-MS spectra of peptides labeled with stable isotope tags. It takes as input a file with peaks with their m/z, retention time and signal quantity. Next to functions to detect peak pairs and mass match them to a database of known peptides, the package also contains appropriate statistics, inference and visualisation tools.  
 Version: 0.1
 Author: Rik Verdonck <rik.verdonck@bio.kuleuven.be>
 Maintainer: Rik Verdonck <rik.verdonck@bio.kuleuven.be>
@@ -27,5 +27,5 @@ Suggests:
   knitr, 
   rmarkdown
 VignetteBuilder: knitr
-License: GNU General Public License  
+License: GNU General Public License version 3 or any later version
 LazyData: true

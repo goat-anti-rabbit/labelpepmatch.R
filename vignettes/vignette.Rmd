@@ -55,6 +55,8 @@ knitr::opts_chunk$set(collapse = T, comment = "#",cache=T,cache.path = '.cache/'
     
     + [Visualising a `pepmatched` object with peptide identifications](#4.5)
     
+    + [Adding extra identifications to a `pepmatched` object](#4.6)
+    
   * [The view_spectra function](#chapter-5)
   
   * [Statistical analysis](#chapter-6)
@@ -79,6 +81,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#",cache=T,cache.path = '.cache/'
     
     + [Between run normalisation](#7.4)
     
+    + [Further statistical inference with limma](#7.5)    
 
 <br/>
 <br/>
@@ -128,7 +131,7 @@ For our locust dataset, the designvector looks like  `c("sol","greg","F","R","F"
 This means that in the first sample, the "sol" condition is labelled with a light label, in the second, the "greg" condition is labelled with a light label, and so on. We would like to emphasize the importance of good experimental design with a balanced label swap. This is critical, since there is no way to tell apart label and condition effects if they are collinear. 
 
 #### Reading in an example dataset<a id="2.3"></a>
-For now, we will simply use the example dataset^[Neuropeptides extracted from the corpora cardiaca of fifth instar nymphs of the desert locust *Schistocerca gregaria* under two rearing conditions: solitarious and gregarious, analyzed with ESI-Q-TOF. For details, see Verdonck et al.] that is available within the package. If you want to read in your own data, use one of the read functions mentioned above. 
+For now, we will simply use the example dataset^[Neuropeptides extracted from the corpora cardiaca of fifth instar nymphs of the desert locust *Schistocerca gregaria* under two rearing conditions: solitarious and gregarious, analyzed with nano-LC-ESI-Q-TOF. For details, see Verdonck et al.] that is available within the package. If you want to read in your own data, use one of the read functions mentioned above. 
 
 ```{r load_locustdata,eval=T,tidy=TRUE}
 schistocerca_tmab<-locustdata
@@ -158,7 +161,8 @@ colnames(schistocerca_tmab$frame)
 
 
 #### Inspecting the `lpm_input` object<a id="2.4"></a>
-Labelpepmatch also has an inbuild summary function^[The `lpm_summary` function is your best friend throughout the pipeline. It can be applied to any labelpepmatch specific class and will always give you an informative and oversightful overview of the object.] that summarizes the data in a somewhat more informative way. Notice that here, you get specific information about the structure of the data, the mass/charge ratios and the charges, the retention times etc. There is also a graphical output that will help you quickly visualize the data in the m/z and retention time dimensions. The parameter "run" determines which run is used for the graphical representation of the data. This can serve as a quick quality check per run before actually getting started with peak pair matching. If run is set to 0, a boxplot overview of all runs is given. 
+Labelpepmatch also has an inbuild summary function that summarizes the data in a somewhat more informative way. This `lpm_summary` function is your best friend throughout the pipeline. It can be applied to any labelpepmatch specific class and will always give you an informative overview of the object. 
+For example in the case of an `lpm_input` object, you get specific information about the structure of the data, the mass/charge ratios and the charges, the retention times etc. There is also a graphical output that will help you quickly visualize the data in the m/z and retention time dimensions. The parameter "run" determines which run is used for the graphical representation of the data. This can serve as a quick quality check per run before actually getting started with peak pair matching. If run is set to 0, a boxplot overview of all runs is given. 
 
 ```{r lpm_summary_of_lpm_input_object,eval=T, fig.width = 9, fig.height = 9}
 lpm_summary(schistocerca_tmab, run=0, graphics=T)
@@ -326,7 +330,7 @@ randomdb<-generate_random_db(db,plot=T)
 ```
 
 #### Mass matching peptides to a database<a id="4.3"></a>
-Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes out handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval, which would in this case be about 0.10 to 0.15 Da. Note that 5 ppm is probabily on the high side for most mass spectrometers, but this data was generated on a slightly older Q-TOF machine.  
+Sometimes one just wants to quickly mass match a putative peptide with a given molecular weight to a database of known peptides. This is where the `pep.massmatch` function comes in handy. Remember we have a database of desert locust peptides. We will now check if two analytes with molecular weights 1080.25 and 1500.58 can be matched to known peptides within a 10 ppm interval, which would in this case be about 0.10 to 0.15 Da. Note that 5 ppm is probabily on the high side for most mass spectrometers, but this data was generated on a slightly older Q-TOF machine.  
 
 ```{r pep_massmatch, eval=F,tidy=TRUE,warning=FALSE}
 pep.massmatch(input=c(1080.25, 1500.60) ,db=db, ID_thresh=5)
@@ -358,7 +362,7 @@ The output of this function will still be of the same `pepmatched` class, but wi
 ```{r lpm_summary_of_pepmatched_object_with_mass_matches, eval=T,fig.width = 12, fig.height = 6}
 lpm_summary(matched_id, printoutput = T, run=1, graphics=T)
 ```
-A total of 11 different neuropeptides have been mass matched to peak pairs in all runs. The estimated false discovery rate is in the order of magnitude of 20%. If identifications are considered a strong signal for genuine labelled peptides, it is interesting to remark that we observe the identified peptides to have a slightly higher quantity, both for light and heavy labelled peptides. However, this can also be due to the fact that usually the most abundant peptides are the best studied, generating a bias in identification. Especially for a non-model organism like the desert locust, we should not expect to be able to match all peak pairs to known peptides. Notice that the bias for the light labelled peptides to have a higher quantity is also clearly visible. Also we observe that most of the identified peptides appear to have only minor differences in retention time within the peak pair. Finally, it is interesting to note that also the peak pair detection estimates are lower than in the first version of this object. This is still due to the refinements that we made with the `lpm_refine` function. 
+A total of 11 different neuropeptides have been mass matched to peak pairs in all runs. The estimated false discovery rate is in the order of magnitude of 10%. If identifications are considered a strong signal for genuine labelled peptides, it is interesting to remark that we observe the identified peptides to have a slightly higher quantity, both for light and heavy labelled peptides. However, this can also be due to the fact that usually the most abundant peptides are the best studied, generating a bias in identification. Especially for a non-model organism like the desert locust, we should not expect to be able to match all peak pairs to known peptides. Notice that the bias for the light labelled peptides to have a higher quantity is also clearly visible. Also we observe that most of the identified peptides appear to have only minor differences in retention time within the peak pair. Finally, it is interesting to note that also the peak pair detection estimates are lower than in the first version of this object. This is still due to the refinements that we made with the `lpm_refine` function. 
 
 Identified peptides have charges between one and three with a preference for double charges, and one single label. Looking deeper in the data, we notice that the same peptides are found both in single, double and triple charged form. Notice the presence of two peptides that are pyroglutaminated, which prevents TMAB from binding to the N-terminal ammine group. Nevertheless, these two peptides can be labeled thanks to the epsilon amine moiety of their lysine residues. 
 
@@ -371,6 +375,12 @@ Identified peptides have charges between one and three with a preference for dou
  knitr::kable(matched_id[[1]][matched_id[[1]]$isID==T,],digits=3)
 ```
 
+#### Adding extra identifications to a `pepmatched` object <a id="4.6"></a>
+In this example case, we assume the only information availble for identification is mass match. But, of course, extra identification information can be available, e.g. from MS/MS fragmentation. As a matter of fact we did some MS/MS on the most interesting peaks in this dataset. One of them, a feature with a deconvoluted monoisotopic mass of 2909.5 Da, could be clustered with other insect pyrokinins with the `bonanza` algorithm^[Falkner *et al.* A spectral clustering approach to MS/MS identification of post-translational modifications. J. Prot. Res. 2008 Nov;7(11):4614-22] and we presume it is an N-terminal elongated version of one of the better known *Schistocerca* pyrokinins. Just for illustration sake, we will here call it "precursorX". This precursor occurs 3 times, in the double, triple and quadruple charge state. 
+
+```{r add_extra_identifications,eval=T,fig.width = 12, fig.height = 6}
+matched_id<-add_id(matched_id,c("313_973","544_1384","65_187"),rep("precursorX",3))
+```
 
 
 
@@ -426,7 +436,7 @@ When we compare all runs, we consistently observe the same overall label bias, b
 
 
 #### Linear models for comparing peptidomes<a id="6.4"></a>
-The `lpm_linearmodel` function contains two methods. The "vanilla" method runs a separate mixed model on each feature, using label effect as a covariate and run as a random effect. This method is quick, and powerful given enough replicates. It is also the preferred method if previous normalizations have been applied to account global or run-specific label effects. The "complexmixed" method is a mixed model ran on all features at once, with label effect nested in run as a covariate. This method is extremely powerful, but calculation times rise quickly, and hence it is only possible to use on a limited number of features (e.g. only mass matched features, only highest quantities etc.). The time complexity is estimated to be quasipolynomial $n^{log(n)}$, and it is advised not to use this method for more than 50 features.
+The `lpm_linearmodel` function contains two methods. The "vanilla" method runs a separate mixed model on each feature, using label effect as a covariate and run as a random effect. This method is quick, and powerful given enough replicates. It is also the preferred method if previous normalizations have been applied to account for global or run-specific label effects. The "complexmixed" method is a mixed model ran on all features at once, with label effect nested in run as a covariate. This method is extremely powerful, but calculation times rise quickly, and hence it is only possible to use on a limited number of features (e.g. only mass matched features, only highest quantities etc.). The time complexity is estimated to be quasipolynomial $n^{log(n)}$, and it is advised not to use this method for more than 50 features.
 We will here focus on the use of the "vanilla" method. Don't forget to correct for multiple testing. Here, we use the Benjamini Hockberg procedure, but other multiple testing correction methods are also present. 
 
 ```{r make_linear_model,eval=T,tidy=TRUE}
@@ -447,7 +457,7 @@ The standard way for visualisation of this kind of data is a volcano plot. Here,
 lpm_volcanoplot(model,plotlocator=F)
 ``` 
 <br/>
-Features in the blue zone have a corrected p-value lower than 0.05, features in the green zone have a corrected p-value lower than 0.01. Red dots indicate features with identifications through mass match. For more information on the interpretation of this specific volcanoplot, we refer to Verdonck et al. 
+Features in the blue zone have a corrected p-value lower than 0.05, features in the green zone have a corrected p-value lower than 0.01. Red dots indicate features with identifications, either through mass match, or added later. For more information on the interpretation of this specific volcanoplot, we refer to Verdonck et al. 
 
 <br/>
 Another nice way to visualize these data is through a heatmap. Here, we make a heatmap for all features that correspond to the standard cutoffs in the function: p value lower than 0.05, adjusted p value lower than 0.05, and (non transformed) fold change higher than 1.25 (25% up or downregulation). 
@@ -474,7 +484,7 @@ For example, when we look at the constrast heat map, we clearly see that not all
 knitr::kable(model$model[rownames(model$model) %in% c("262_614", "65_187", "544_1384", "313_973") | model$model$pepID %in% c("Scg-PK-4","Scg-PK-5"), c(18, 22, 23, 26, 27)],digits=3)
 ``` 
 
-This closer look gives away that we are actually looking at only 3 different peptides, with charges ranging between 2 and 4. Most probabily, since the patterns of expression for the 1644 Da and the 2909 Da peptides align so well, we are looking at a longer isoform or precursor of the Scg-PK-5 peptide. The 790 Da peptide remains unkown, but it may well be a fragment that is also co-encoded in the larger precursor. 
+This closer look gives away that we are actually looking at only 3 different peptides, with charges ranging between 2 and 4. Most probabily, since the patterns of expression for the 1644 Da and the 2909 Da peptides align so well, we are looking at a longer isoform or precursor of the Scg-PK-5 peptide (which we already knew from MS/MS, see [add_id](#4.6)). The 790 Da peptide remains unkown, but it may well be a fragment that is also co-encoded in the larger precursor. 
 
 
 
@@ -544,8 +554,15 @@ plotDensities(RG3) # after median within-array and quantile between-array normal
 ``` 
 
 Notice how the two "channels" are normalized towards each other. This is a very powerful normalization and it should be emphasized that this is probabily not necessary in every situation. 
+
+
+
+
+
+#### Further statistical inference with limma<a id="7.5"></a>
 Now we know how to create an RG list object and normalize it, there are ample possibilities for linear models on the data. In what follows, we will give some pointers without printing all the output. Here, we use a simple linear model after loess within-array normalization. 
-For more information, the reader is referred to the limma manual. 
+The `lmFit` function offers ample possibilities to for example account for multiple observations of the same peptide in different charge states (ndups, normally used for multiple probes per gene), and different regression methods that can be explored. The `eBayes` function is another very interesting function that should be explored with these kind of data. It was originally designed for inferences on gene expression, where it has proven to be a good ally in the battle against overdispersion.  
+For more information, the reader is referred to the limma manual and the example workflow in the labelpepmatch package. 
 
 
 

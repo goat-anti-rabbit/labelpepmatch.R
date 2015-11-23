@@ -6,7 +6,7 @@ dir.create(installdirectory, showWarnings = FALSE)
 library(devtools)
 #install_github("goat-anti-rabbit/labelpepmatch.R")
 with_libpaths(new=installdirectory,install_github("goat-anti-rabbit/labelpepmatch.R"))
-# This does not seem to work before I first install it like this:
+# Sometimes this does not work and you first have to install it through github: 
 # install_github("goat-anti-rabbit/labelpepmatch.R")
 # and then again like this:
 # with_libpaths(new=installdirectory,install_github("goat-anti-rabbit/labelpepmatch.R"))
@@ -33,6 +33,8 @@ matched<-lpm_refine(matched,remove.more.labels.than.charges=T, quantmin=2**8)
 # download database
 db<-download_lpm_db("desertlocust")
 
+# test the stand-alone pep.massmatch function
+testID<-pep.massmatch(input = c(1080.25, 1500.6), db = db, ID_thresh = 5)
 
 
 # Set seed for FDR estimation reproducibility
@@ -40,7 +42,8 @@ set.seed(7)
 # mass match peak pairs to database
 matched_id <- pep.id(pepmatched = matched, ID_thresh = 5, db = db, cores = 8, 
     FDR = T, iterations = 10)
-    
+ 
+   
 
 #identifieds<-lpm_refine(matched_id,only.identified=T)
 
@@ -49,6 +52,9 @@ statlist<-make.statlist  (pepmatched_object=matched_id,cutoff=1,logtransform=T,q
                 
                 
 model0 <- lpm_linearmodel(statlist, method = "vanilla", p.adjust.method = "BH", cores = 8)
+
+model0$model[rownames(model0$model) %in% c("262_614", "65_187", "544_1384", "313_973") | model0$model$pepID %in% c("Scg-PK-4","Scg-PK-5"), c(18, 22, 23, 26, 27)]
+
 
 # calculate correlation coefficient for residual contrasts for PK4 and PK5
 	model0		<-  x
@@ -113,13 +119,14 @@ x$identified_peptides
 
 
 # supplementary figures I and II demonstrate how non peak pair features and peak pair features have comparable patterns of molecular weights, but show differences in abundance. 
-pdf("suppl.fig.I.pdf")
-par(mfrow=c(2,2))
-hist(matched$matchlist_B$MW,main="MW of peak pair features",xlab="WM",breaks=10,xlim=c(0,4000))
-hist(masses,main="MW of non peak pair features",xlab="MW",breaks=10,xlim=c(0,4000))
+pdf("suppl_fig_I.pdf")
+par(mfrow=c(2,1))
+hist(matched$matchlist_B$MW,main="MW of peak pair features",xlab="WM",breaks=10,xlim=c(0,4000),col="lightgreen")
+hist(masses,main="MW of non peak pair features",xlab="MW",breaks=10,xlim=c(0,4000),col="tomato")
 dev.off()
 
-pdf("suppl.fig.II.pdf")
+pdf("suppl_fig_II.pdf")
+par(mfrow=c(1,1))
 boxplot(
 log2(onlypeakpair$frame[,11]+1),
 log2(nonpeakpair$frame[,11]+1),
@@ -137,8 +144,10 @@ log2(onlypeakpair$frame[,17]+1),
 log2(nonpeakpair$frame[,17]+1),
 log2(onlypeakpair$frame[,18]+1),
 log2(nonpeakpair$frame[,18]+1)
-,ylim=c(0,25),xaxt="n",main="quantity of peak pair features",ylab="log quantity",col=c("lightgreen","tomato"))
+,ylim=c(0,25),xaxt="n",main="quantity of peak pair features",ylab="log2 quantity",col=c("lightgreen","tomato"))
 axis(1,at=seq(1.5,15.5,2),labels=1:8)
+
+legend(x="topleft",legend=c("peak pair", "non peak pair"),fill=c("lightgreen","tomato"))
 dev.off()
 
 # Differences in quantity between labeled and unlabeled peaks. Different ways of looking at things...
@@ -152,10 +161,10 @@ plot(log2(nonpeakpair$frame[,11:18]+1),ylim=c(0,25),xlim=c(0,25),main="quantity 
 plot(log2(onlypeakpair$frame[,11:18]+1),ylim=c(0,25),xlim=c(0,25),main="quantity of peak pair features",pch="*",col="darkblue")
 
 # supplementary figure III
-pdf("suppl.fig.III.pdf")
-plot(masses,nonpeakpairframe$Ret_1,pch=nonpeakpairframe$z,xlab="MW",ylab="retention time")
+pdf("suppl_fig_III.pdf",pointsize=9)
+plot(masses,nonpeakpairframe$Ret_1,pch=nonpeakpairframe$z,xlab="MW (Da)",ylab="retention time")
 points(matched[[1]]$MW,matched[[1]]$ret_L,pch=matched[[1]]$z_L,col="red")
-legend(x=4100,y=48,c(1,2,3,4,5,6,"no peak pair","peak pair"),title="charge",pch=c(1,2,3,4,5,6,15,15),col=c(rep("black",7),"red"))
+legend(x=3600,y=48,c(1,2,3,4,5,6,"no peak pair","peak pair"),title="charge",pch=c(1,2,3,4,5,6,15,15),col=c(rep("black",7),"red"))
 dev.off()
 
 
@@ -289,14 +298,15 @@ plot(RG2$R-RG2$G,RG3$R-RG3$G)
 plot(RG2$R/RG2$G,RG3$R/RG3$G)
 
 # Supplementary figure IV
-pdf("suppl.fig.IV.pdf")
-par(mfrow=c(2,2))
-pairs(cbind.data.frame(supermatrix$logFC_0,supermatrix$logFC_1,supermatrix$logFC_2,supermatrix$logFC_3),main="correlation between fold changes",labels=c("log FC 0","log FC 1","log FC 2","log FC 3"),lower.panel=NULL)
+pdf("suppl_fig_IV.pdf")
+par(mfrow=c(1,1))
+pairs(cbind.data.frame(supermatrix$logFC_0,supermatrix$logFC_1,supermatrix$logFC_2,supermatrix$logFC_3),main="correlation between fold changes",labels=c("log FC 0","log FC 1","log FC 2","log FC 3"),lower.panel=NULL,col=rgb(0.2,0,0,alpha=.2),pch=19)
 dev.off()
 
 # Supplementary figure V
-pdf("suppl.fig.V.pdf")
-pairs(cbind.data.frame(log(supermatrix$p_0),log(supermatrix$p_1),log(supermatrix$p_2),log(supermatrix$p_3)),main="correlation between log of p values",labels=c("log p 0","log p 1","log p 2","log p 3"),lower.panel=NULL)
+pdf("suppl_fig_V.pdf")
+par(mfrow=c(1,1))
+pairs(cbind.data.frame(log(supermatrix$p_0),log(supermatrix$p_1),log(supermatrix$p_2),log(supermatrix$p_3)),main="correlation between log of p values",labels=c("log p 0","log p 1","log p 2","log p 3"),lower.panel=NULL,col=rgb(0.2,0,0,alpha=.2),pch=19,xlim=c(-10,0),ylim=c(-10,0))
 dev.off()
 
 # uninteresting...

@@ -39,7 +39,7 @@ pep.id(pepmatched, ID_thresh = 10, db, presetdb = NA, dbpath = NA,
 \item{verbose}{Logical. If TRUE, verbose output is generated during identifications.}
 }
 \value{
-An object of class \code{pepmatched} with added mass matches that can be used for subsequent analysis using labelpepmatch functions.
+An object of class \code{pepmatched} with added mass matches that can be used for subsequent analysis using labelpepmatch functions. This pepmatched object will also contain a couple of extras like detailed pep.id parameters, details about the FDR estimation, a list of identified peptides with their counts, and a deltavector with the mass shifts in case the mass correction has been applied.
 }
 \description{
 Mass match peak pairs from a pepmatched object to known databases. Can call inbuilt databases, but you can also use your own local database.
